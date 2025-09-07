@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+#app {
+  max-width: 1250px;
+  margin: 0 auto;
+ 
+}
+body {
+  @apply p-4;
+
+}
