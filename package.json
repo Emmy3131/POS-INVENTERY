@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "dev": "npx @tailwindcss/cli -i ./src/css/input.css -o ./dist/css/output.css --watch",
+    "start": "parcel watch ./src/js/index.js --dist-dir ./dist/js"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.13",
+    "chart.js": "^4.5.0",
+    "parcel": "^2.15.4",
+    "tailwindcss": "^4.1.13"
+  }
+}

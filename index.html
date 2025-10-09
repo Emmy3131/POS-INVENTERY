@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>POS INVENTERY</title>
+  <link rel="stylesheet" href="./dist/css/output.css">
+  <link rel="stylesheet" href="./fontawesome-free-6.6.0-web/css/all.min.css">
+  <!-- Google Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100 ">
+
+  <div id="app">
+    <!-- header -->
+
+    <div
+      class="fixed w-full z-20 top-0 left-0 bg-white shadow-md flex items-center justify-between px-6 py-[18px] rounded-xl">
+      <div class="text-2xl font-bold text-gray-700 flex items-center space-x-3">
+        <div
+          class="text-2xl text-green-600 bg-black p-2 w-[50px] h-[50px] flex items-center justify-center rounded-full">
+          <i class="fa-solid fa-cash-register"></i>
+        </div>
+        <div class="flex flex-col -space-y-1">
+          <h1>POS</h1>
+          <span class="text-green-400 text-md text-[17px]">INVENTERY MACHINE</span>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-7">
+        <i class="fas fa-bell text-gray-600 text-xl cursor-pointer"></i>
+        <a href="">
+          <i id="cartIcon" class="fa-solid fa-cart-plus nav-link text-gray-600 text-xl cursor-pointer"></i>
+        </a>
+        <div class="relative inline-block text-left">
+          <!-- Trigger -->
+          <span id="profile-btn" class="flex gap-2 items-center cursor-pointer">
+            <img class="w-[30px] h-[30px] rounded-full" src="./userImage/IMG_20240712_183508_440.jpg" alt="user">
+            <p>Anyanwu</p>
+            <i class="fas fa-chevron-down"></i>
+          </span>
+
+          <!-- Dropdown Menu -->
+          <div id="dropdown-menu"
+            class="hidden absolute text-center  mt-[10px] w-30 bg-white rounded-lg shadow-lg border-0">
+            <ul class="py-2">
+              <li>
+                <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</a>
+              </li>
+              <li>
+                <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Logout</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- Sidebar -->
+    <aside class="w-36 h-[500px] overflow-y-scroll fixed top-[86px] bg-white flex flex-col rounded-xl shadow">
+      <nav class="space-y-4 p-3 pb-11">
+        <a href="#dashboard"
+          class="nav-link flex flex-col items-center gap-3 px-6 py-2 bg-black text-green-400 rounded-lg">
+          <span class="material-icons">dashboard</span> Dashboard
+        </a>
+        <a href="#users"
+          class="nav-link flex flex-col items-center gap-3 px-6 py-2 text-gray-600 hover:bg-black hover:text-green-400 rounded-lg">
+          <span class="material-icons">person</span> Users
+        </a>
+        <a href="#products"
+          class="nav-link flex flex-col items-center gap-3 px-6 py-2 text-gray-600  hover:bg-black hover:text-green-400 rounded-lg">
+          <span class="material-icons">shopping_bag</span>
+          <span>Products</span>
+        </a>
+        <a href="#make-sale"
+          class="nav-link flex flex-col items-center gap-3 px-3 py-2 text-gray-600  hover:bg-black hover:text-green-400 rounded-lg">
+          <span class="material-icons">sell</span>
+          <span>Make Sale</span>
+        </a>
+        <a href="#transaction"
+          class="nav-link flex flex-col items-center gap-3 px-6 py-2 text-gray-600  hover:bg-black hover:text-green-400 rounded-lg">
+          <span class="material-icons">account_balance_wallet</span>
+          <span>Transaction</span>
+        </a>
+        <a href="#notifications"
+          class="nav-link flex flex-col items-center gap-3 px-6 py-2 text-gray-600  hover:bg-black hover:text-green-400 rounded-lg">
+          <span class="material-icons">notifications</span>
+          <span>Notifications</span>
+        </a>
+        <a href="#settings"
+          class="nav-link flex flex-col items-center gap-3 px-6 py-2 text-gray-600  hover:bg-black hover:text-green-400 rounded-lg">
+          <span class="material-icons">settings</span>
+          <span>Settings</span>
+        </a>
+        <a href="#logout"
+          class="nav-link flex flex-col items-center gap-3 px-6 py-2 text-gray-600  hover:bg-black hover:text-green-400 rounded-lg ">
+          <span class="material-icons">logout</span> Logout
+        </a>
+      </nav>
+    </aside>
+
+
+
+    <!-- Main Content -->
+    <main class="ml-36 mt-[86px] p-6 relative max-w-[85%]">
+      <!--Dashboard Start-->
+      <div id="dashboard" class="pages absolute">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-3">
+          <h1 class="text-2xl font-semibold bg-white p-4 rounded-xl shadow">Dashboard overview</h1>
+          <span class="text-sm text-blue-600 p-4 rounded-xl shadow font-bold">18:01pm <span
+              class="text-gray-400 px-1">|</span> <span>05/09/2025</span></span>
+        </header>
+
+        <!-- Stats Cards -->
+        <section class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-3">
+          <div class="bg-white px-6 py-4 rounded-xl shadow">
+            <p class="text-gray-500">Total Users</p>
+            <h2 class="text-2xl font-bold">2,629</h2>
+            <p class="text-blue-500 text-sm  bg-blue-200 rounded-xl w-[80px] px-[12px] py-[3px] mt-2"><i
+                class="fa-solid fa-arrow-trend-up"></i> +3%</p>
+          </div>
+          <div class="bg-white px-6 py-4 rounded-xl shadow">
+            <p class="text-gray-500">Total Products</p>
+            <h2 class="text-2xl font-bold">10,298</h2>
+            <p class="text-green-500 text-sm  bg-green-200 rounded-xl w-[80px] px-[12px] py-[3px] mt-2"><i
+                class="fa-solid fa-arrow-trend-up"></i> +5%</p>
+          </div>
+          <div class="bg-white px-6 py-4 rounded-xl shadow">
+            <p class="text-gray-500">Total Sales</p>
+            <h2 class="text-2xl font-bold">5,872</h2>
+            <p class="text-yellow-500 text-sm  bg-yellow-200 rounded-xl w-[80px] px-[12px] py-[3px] mt-2"><i
+                class="fa-solid fa-arrow-trend-up"></i> +2%</p>
+          </div>
+          <div class="bg-white px-6 py-4 rounded-xl shadow">
+            <p class="text-gray-500">Total Transactions</p>
+            <h2 class="text-2xl font-bold">₦108,000,000</h2>
+            <p class="text-purple-500 text-sm bg-purple-200 rounded-xl w-[80px] px-[12px] py-[3px] mt-2"><i
+                class="fa-solid fa-arrow-trend-up"></i> +3%</p>
+          </div>
+        </section>
+
+        <!-- Charts -->
+        <section class="flex-col md:flex-row gap-4 mb-3 flex">
+          <!-- Sales Trend -->
+          <div class="bg-white p-3 rounded-xl shadow md:grow">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="font-semibold">Sale’s Trend</h3>
+              <span class="text-sm text-gray-500">This Month ▼</span>
+            </div>
+            <canvas id="salesChart" class="h-64"></canvas>
+          </div>
+
+          <!-- Inventory Alerts -->
+          <div class="bg-white rounded-xl shadow flex-1 md:flex-[1]">
+            <h3 class="font-semibold mb-4">Inventory Alerts</h3>
+            <canvas id="inventoryChart" class="h-64"></canvas>
+            <div class="mt-4">
+              <p class="text-gray-500">Low stock</p>
+              <p class="text-orange-500 font-semibold">2,532</p>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- New Users Table -->
+        <section class="bg-white p-6 rounded-xl shadow">
+          <h3 class="font-semibold mb-4">New users</h3>
+          <div class="overflow-x-auto max-w-7xl">
+            <table class="w-full text-left border-collapse usersTable">
+              <thead>
+                <tr class="bg-gray-100 text-gray-600">
+                  <th class="p-3">User</th>
+                  <th class="p-3">Email</th>
+                  <th class="p-3">Phone number</th>
+                  <th class="p-3">Date</th>
+                  <th class="p-3">Status</th>
+                  <th class="p-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="userList-1" class="text-gray-700 text-sm eachUser">
+                <!-- <tr class="hover:bg-gray-50">
+                  <td class="p-3 flex items-center gap-3">
+                    <img src="https://i.pravatar.cc/40" class="w-10 h-10 rounded-full" alt="">
+                    <span>Diala Chisomaga</span>
+                  </td>
+                  <td class="p-3">diala@gmail.com</td>
+                  <td class="p-3">+234 813 456 5685</td>
+                  <td class="p-3">12/10/13</td>
+                  <td class="p-3 text-blue-500 font-medium">Active</td>
+                  <td class="p-3">
+                    <button class="px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300">View</button>
+                  </td>
+                </tr> -->
+                <!-- More rows -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+      <!--Dashboard End-->
+
+      <!--USers Page Start-->
+      <!-- search bar and icons -->
+      <!-- <div class="flex rounded-xl shadow-sm p-3 w-[500px] justify-between">
+          <input type="text" class="outline-0 border-0 w-full" placeholder="Search">
+          <img class="w-[20px]" src="./utilityImages/searchIcon.png" alt="">
+        </div> -->
+      <div id="users" class="pages  absolute  hidden w-full">
+        <header class="flex justify-between items-center mb-3">
+          <h1 class="text-2xl font-semibold bg-white p-2 px-4 rounded-xl shadow">Users</h1>
+          <div>
+            <button id="userAddBtn"
+              class="bg-green-500 text-white px-4 py-2 rounded-xl shadow font-bold hover:bg-black ml-4"><i
+                class="fa-solid fa-plus"></i>Add User</button>
+          </div>
+        </header>
+
+
+        <div class="overflow-x-auto">
+          <div class="bg-white shadow rounded-xl overflow-hidden">
+            <table class="min-w-full border-collapse usersTable">
+              <!-- Table Head -->
+              <thead>
+                <tr class="bg-gray-200 text-gray-600 text-sm">
+                  <th class="py-3 px-6 text-left font-medium">User</th>
+                  <th class="py-3 px-6 text-left font-medium">Email</th>
+                  <th class="py-3 px-6 text-left font-medium">Phone number</th>
+                  <th class="py-3 px-6 text-left font-medium">Date</th>
+                  <th class="py-3 px-6 text-left font-medium">Status</th>
+                  <th class="py-3 px-6 text-center font-medium">Actions</th>
+                </tr>
+              </thead>
+
+              <!-- Table Body -->
+              <tbody id="userList" class="text-gray-700 text-sm eachUser">
+                <!-- <tr  class="hover:bg-gray-50"> -->
+                <!-- User -->
+                <!-- <td class="py-4 px-4 flex items-center gap-3">
+                    <img src="https://i.pravatar.cc/40" alt="avatar" class="w-10 h-10 rounded-full">
+                    <span class="font-medium">Diala Chisomaga</span>
+                  </td> -->
+                <!-- Email -->
+                <!-- <td class="py-4 px-6">diala@gmail.com</td> -->
+                <!-- Phone -->
+                <!-- <td class="py-4 px-6">09012783685</td> -->
+                <!-- Date -->
+                <!-- <td class="py-4 px-6">12/10/13</td> -->
+                <!-- Status -->
+                <!-- <td class="py-4 px-6">
+                    <span class="text-blue-600 font-medium">Active</span>
+                  </td> -->
+                <!-- Actions -->
+                <!-- <td class="py-4 px-6 flex justify-center gap-3">
+                    <button class="p-2 bg-green-100 text-green-600 rounded-lg hover:bg-green-200">
+                      <i class="fas fa-user-edit"></i>
+                    </button>
+                    <button class="p-2 bg-gray-100 text-gray-500 rounded-lg hover:bg-gray-200">
+                      <i class="fas fa-user"></i>
+                    </button>
+                    <button class="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200">
+                      <i class="fas fa-user-times"></i>
+                    </button> -->
+                <!-- </td>
+                </tr> -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+      <!--USers Page Start-->
+
+      <!---addUser page start-->
+
+      <!-- User Card Modal -->
+      <div id="userCard" class="fixed z-30 top-0 left-0 w-full h-screen m-auto flex items-center justify-center 
+         bg-black/50 bg-opacity-50 
+         opacity-0 scale-95 pointer-events-none 
+         transition-all duration-300 ease-in-out">
+
+        <!-- Card -->
+        <div class="bg-gradient-to-br from-green-800 to-emerald-600 p-8 rounded-2xl shadow w-[700px]">
+          <div class="bg-white rounded-2xl shadow-xl p-6 w-full">
+
+            <!-- Title -->
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Add new User</h2>
+            <p class="text-gray-500 mb-4">Fill in details to register a new user.</p>
+
+            <!-- Form -->
+            <form id="userForm" class="space-y-4 ">
+              <!-- Name & Phone -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                  <input id="userInputName" type="text" placeholder="e.g: Diala Chisomaga"
+                    class="w-full rounded-full shadow p-4 focus:outline-none hover:border hover:border-gray-700 transition-colors duration-1000 ease-in-out" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Phone number</label>
+                  <input id="userInputnum" type="tel" placeholder="e.g: 09072272350"
+                    class="w-full rounded-full shadow p-4 focus:outline-none hover:border hover:border-gray-700 transition-colors duration-1000 ease-in-out" />
+                </div>
+                <div class="flex flex-col">
+                  <label>Password</label>
+                  <input id="userInputPassword" type="password"
+                    class="rounded-full shadow p-4 focus:outline-none hover:border hover:border-gray-700 transition-colors duration-1000 ease-in-out" />
+                </div>
+
+                <div class="flex flex-col">
+                  <label>Profile Image</label>
+                  <input id="userInputPicture" type="file"
+                    class="rounded-full shadow p-4 focus:outline-none hover:border hover:border-gray-700 transition-colors duration-1000 ease-in-out" />
+                </div>
+              </div>
+
+              <!-- Image -->
+              <!-- <div class="flex flex-col">
+                <label>Profile Image</label>
+                <input id="userInputPicture" type="file"
+                  class="rounded-2xl shadow w-[200px] p-4 focus:outline-none hover:border hover:border-gray-700 transition-colors duration-1000 ease-in-out" />
+              </div> -->
+
+              <!-- Email -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input id="userInputEmail" type="email" placeholder="e.g: dialavictor@yopmail.com"
+                  class="w-full shadow rounded-full p-4 focus:outline-none hover:border hover:border-gray-700 transition-colors duration-1000 ease-in-out" />
+              </div>
+
+              <!-- Buttons -->
+              <div class="flex justify-end space-x-4 pt-4">
+                <button id="addUserCardCancelBtn" type="button"
+                  class="px-4 py-2 rounded-full  bg-gray-100 text-gray-700 hover:bg-gray-200 transition">
+                  Cancel
+                </button>
+                <button id="addUserBtn" type="submit"
+                  class="flex items-center space-x-2 px-4 py-2 rounded-full bg-green-600 text-white hover:bg-green-700 shadow-md transition">
+                  <span class="text-lg">＋</span>
+                  <span>Add User</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Products Page Start-->
+      <div class="pages w-full absolute hidden" id="products">
+        <header class="flex justify-between items-center mb-3">
+          <h1 class="text-2xl font-semibold bg-white p-2 px-4 rounded-xl shadow">Products</h1>
+          <div>
+            <button id="productAddBtn"
+              class="bg-green-500 text-white px-4 py-2 rounded-xl shadow font-bold hover:bg-black ml-4">
+              <i class="fa-solid fa-plus"></i>Add Product
+            </button>
+          </div>
+        </header>
+
+        <div id="ProductList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+        </div>
+      </div>
+      <!-- Products Page End-->
+
+      <!--Make Sale page start-->
+      <div class="pages w-full absolute hidden" id="make-sale">
+
+        <div id="saletList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <!-- product here -->
+        </div>
+
+        <!-- Add to Cart Modal -->
+
+        <div id="cartSection" class=" hidden relative w-6xl m-auto p-4">
+          <!-- Cart Title -->
+          <div class="">
+            <!-- Cart Header -->
+            <h2 class="text-xl font-bold mb-1">Your cart</h2>
+            <div class="flex justify-between items-center w-[790px] mb-4">
+              <p class="text-gray-500">Review your items and proceed to checkout</p>
+              <button id="clearCartBtn"
+                class=" bg-green-500 text-white p-2 rounded-lg font-semibold hover:bg-green-600">
+                Clear Cart
+              </button>
+            </div>
+
+            <div class="flex flex-col lg:flex-row gap-6">
+              <!-- Left: Cart Items -->
+              <div class="flex-1  overflow-hidden " id="cartList">
+                <!-- Cart Item -->
+                <!-- <div  class="flex items-center bg-white shadow rounded-xl p-4 mb-4"> -->
+                <!-- Image -->
+                <!-- <div class="w-32 h-28 flex-shrink-0">
+                    <img src="iphone.png" alt="iPhone 15 Pro Max" class="object-cover w-full h-full rounded-lg">
+                  </div> -->
+
+                <!-- Item Info -->
+                <!-- <div class="ml-4">
+                    <h3 class="font-semibold text-lg">iPhone 15 Pro Max</h3>
+                    <p class="text-gray-500 text-sm">A17 Pro Chip | 256GB Storage</p>
+                    <p class="text-gray-600 mt-1">Qty 1</p>
+                  </div> -->
+
+                <!-- Price + Delete -->
+                <!-- <div class="flex flex-col items-end">
+                    <p class="text-lg font-semibold text-gray-900">₦1,200,000</p>
+                    <button class="mt-2 text-red-500 hover:text-red-700 text-xl">🗑️</button>
+                  </div> -->
+                <!-- </div> -->
+              </div>
+
+              <!-- Right: Order Summary -->
+              <div class="w-full lg:w-[300px] bg-white shadow rounded-xl p-6 h-fit">
+                <h3 class="text-lg font-semibold mb-4">Order summary</h3>
+                <div class="flex justify-between mb-2 text-gray-700">
+                  <span>Subtotal</span>
+                  <span id="subTotal" class="font-semibold">₦0</span>
+                </div>
+                <div class="flex justify-between mb-2 text-gray-700">
+                  <span>Tax</span>
+                  <span id="tax" class="font-semibold">₦0</span>
+                </div>
+                <div class="flex justify-between mb-4 text-gray-700">
+                  <span>Discount</span>
+                  <span id="discount" class="font-semibold text-green-500">₦0</span>
+                </div>
+                <hr class="my-2">
+                <div id="orderTotal" class="flex justify-between mb-6 text-gray-900 font-semibold">
+                  <span>Order total</span>
+                  <span>₦0</span>
+                </div>
+                <button id="checkOutBtn"
+                  class="w-full bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600">
+                  Proceed to Payment
+                </button>
+              </div>
+            </div>
+
+            <!-- Add to Cart Modal Ends-->
+          </div>
+
+
+          <!--Make sale page Ends-->
+
+
+          <!---Transaction page start-->
+          <div class=" pages bg-purple-300 absolute hidden" id="transaction">
+            Transaction HERE
+          </div>
+          <!---Transaction page Ends-->
+
+          <!--Notifications page start-->
+          <div class="pages bg-pink-300 absolute hidden" id="notifications">
+            Notifications HERE
+          </div>
+          <!--Notifications page Ends-->
+
+          <!--Settings page start-->
+          <div class="pages bg-blue-300 absolute hidden" id="settings">
+            Settings HERE
+          </div>
+          <!--Settings page Ends-->
+
+          <!--Logout page start-->
+          <div class="pages bg-gray-300 absolute hidden" id="logout">
+            Logout HERE
+          </div>
+    </main>
+
+  </div>
+
+  <!-- payment model -->
+  <div id="paymentContainer" class="hidden w-full fixed top-0 z-40 bg-black/50">
+
+    <!-- Add product Card -->
+    <div class="w-full h-screen m-auto flex items-center justify-center">
+      <div class="bg-gradient-to-br from-green-800 to-emerald-600 p-6 rounded-2xl shadow w-[700px] relative">
+        <div id="paymentCanBtn" class="absolute right-0 top-0 rounded-full bg-white p-3 w-[50px] h-[50px] text-center">
+          <i class="fa-solid text-[19px] font-bold hover:text-gray-500 fa-arrow-right"></i>
+        </div>
+        <div class="bg-white rounded-2xl shadow-xl p-4 w-full">
+
+          <!-- Title -->
+          <div class="text-center mt-3">
+
+            <h2 class="text-3xl font-bold text-gray-900">Payment Method</h2>
+            <p class="text-[19px] text-gray-500 font-medium my-4">Please Select Your Payment Method</p>
+          </div>
+          <div>
+            <ul class="flex items-center mb-3 px-4">
+
+              <!-- mobile transfer -->
+              <li class="flex flex-col items-center hover:border-1 hover:border-gray-700 w-[200px]">
+                <div class="text-[60px] text-gray-700 border border-gray-100 transition duration-500 hover:shadow-md">
+                  <i class="fa-solid fa-mobile-screen-button"></i>
+                </div>
+                <div>
+                  <span class="text-[19px] font-bold hover:text-green-700 text-gray-700">Mobile Transfer</span>
+                </div>
+
+              </li>
+
+              <!-- card -->
+              <li
+                class="flex flex-col items-center hover:border-w-[100px] hover:border-1 hover:border-gray-700 w-[200px] border border-gray-100 transition duration-500 hover:shadow-md">
+                <div class="text-[60px] text-gray-700">
+                  <i class="fa-solid fa-credit-card"></i>
+                </div>
+                <div>
+                  <span class="text-[19px] font-bold hover:text-green-700 text-gray-700">Card</span>
+                </div>
+              </li>
+
+              <!-- cash -->
+              <li
+                class="flex flex-col items-center hover:border-1 hover:border-gray-700 w-[200px] border border-gray-100 transition duration-500 hover:shadow-md">
+                <div class="text-[60px] text-gray-700">
+                  <i class="fa-solid fa-calendar"></i>
+                </div>
+                <div>
+                  <span class="text-[19px] font-bold hover:text-green-700 text-gray-700">Cash</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <label class="font-medium text-[20px] py-4 text-gray-700" for="">Amout</label>
+          <div class="flex border-2 border-gray-400 items-center rounded-lg p-2 mb-3 w-[615px]">
+            <i class="fas fa-naira-sign text-gray-500"></i>
+            <input id="totalAmountInput" class="outline-0" type="number" readonly>
+          </div>
+          <!-- Button -->
+          <div id='paymentBtnContainer'>
+            <button id="paymentBtn" type="submit"
+              class="outline-none py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 shadow-md w-full text-center transition font-bold text-2xl">
+              Pay Now
+            </button>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!--Add Product Card End-->
+  </div>
+  <!-- Product Modal -->
+
+  <div id="addProductContainer" class="hidden w-full h-screen m-auto fixed top-0 left-0 bg-black/50 bg-opacity-50 z-20">
+
+    <!-- Add product Card -->
+    <div class="w-full h-screen m-auto flex items-center justify-center">
+      <div class="bg-gradient-to-br from-green-800 to-emerald-600 p-8 rounded-2xl shadow w-[700px]">
+        <div class="bg-white rounded-2xl shadow-xl p-6 w-full">
+
+          <!-- Title -->
+          <h2 class="text-2xl font-bold text-gray-800 mb-2">Add New Product</h2>
+          <p class="text-gray-500 mb-4">Fill The Space Below</p>
+
+          <!-- Form -->
+          <form id="productForm" class="space-y-4 ">
+            <!-- Name & Phone -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
+                <input id="proInputName" type="text" placeholder="product name"
+                  class="w-full rounded-full shadow p-4 focus:outline-none hover:border hover:border-gray-700 transition-colors duration-1000 ease-in-out" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Discription</label>
+                <input id="proInputDiscription" type="tel" placeholder="product discription"
+                  class="w-full rounded-full shadow p-4 focus:outline-none hover:border hover:border-gray-700 transition-colors duration-1000 ease-in-out" />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Price</label>
+                <input id="proInputPrice" type="tel" placeholder="product price"
+                  class="w-full rounded-full shadow p-4 focus:outline-none hover:border hover:border-gray-700 transition-colors duration-1000 ease-in-out" />
+              </div>
+
+              <div class="relative">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                <select name="" id="productCategory"
+                  class="w-full rounded-full shadow p-4 focus:outline-none hover:border hover:border-gray-700 transition-colors duration-1000 ease-in-out">
+                  <option class="focus:border-0" value="">Select the product Category</option>
+                  <option value="phones">Phones</option>
+                  <option value="accessories">Accessories</option>
+                  <option value="gadgets">Gadgets</option>
+                </select>
+
+              </div>
+
+              <!-- Image -->
+              <div class="flex flex-col">
+                <label>Product Quantity</label>
+                <input id="proInputQuantity" type="number" placeholder="product quantity"
+                  class="rounded-2xl shadow w-full p-4 focus:outline-none hover:border hover:border-gray-700 transition-colors duration-1000 ease-in-out" />
+              </div>
+
+              <!-- Image -->
+              <div class="flex flex-col">
+                <label>Profile Image</label>
+                <input id="proInputPicture" type="file"
+                  class="rounded-2xl shadow w-full p-4 focus:outline-none hover:border hover:border-gray-700 transition-colors duration-1000 ease-in-out" />
+              </div>
+            </div>
+
+
+
+
+            <!-- Buttons -->
+            <div class="flex justify-end space-x-4 pt-4">
+              <button id="addProductCardCancelBtn" type="button"
+                class="px-4 py-2 rounded-full  bg-gray-100 text-gray-700 hover:bg-gray-200 transition">
+                Cancel
+              </button>
+
+              <div id='prductBtnContainer'>
+                <button id="addProductBtn" type="submit"
+                  class="flex items-center space-x-2 px-4 py-2 rounded-full bg-green-600 text-white hover:bg-green-700 shadow-md transition">
+                  <span class="text-lg">＋</span>
+                  <span>Add product</span>
+                </button>
+
+                <button id="editProductBtn" type="submit"
+                  class="hidden items-center space-x-2 px-4 py-2 rounded-full bg-green-600 text-white hover:bg-green-700 shadow-md transition">
+                  <span class="text-lg">＋</span>
+                  <span>Save Changes</span>
+                </button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!--Add Product Card End-->
+  </div>
+  <!-- End product modal -->
+
+
+
+  <script src="./dist/js/index.js"></script>
+</body>
+
+</html>
