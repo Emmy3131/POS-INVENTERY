@@ -108,7 +108,7 @@
     <!-- Main Content -->
     <main class="ml-36 mt-[86px] p-6 relative max-w-[85%]">
       <!--Dashboard Start-->
-      <div id="dashboard" class="pages absolute">
+      <div id="dashboard" class="pages absolute w-full">
         <!-- Header -->
         <header class="flex justify-between items-center mb-3">
           <h1 class="text-2xl font-semibold bg-white p-4 rounded-xl shadow">Dashboard overview</h1>
@@ -396,21 +396,21 @@
                 <!-- <div  class="flex items-center bg-white shadow rounded-xl p-4 mb-4"> -->
                 <!-- Image -->
                 <!-- <div class="w-32 h-28 flex-shrink-0">
-                    <img src="iphone.png" alt="iPhone 15 Pro Max" class="object-cover w-full h-full rounded-lg">
-                  </div> -->
+                                <img src="iphone.png" alt="iPhone 15 Pro Max" class="object-cover w-full h-full rounded-lg">
+                              </div> -->
 
                 <!-- Item Info -->
                 <!-- <div class="ml-4">
-                    <h3 class="font-semibold text-lg">iPhone 15 Pro Max</h3>
-                    <p class="text-gray-500 text-sm">A17 Pro Chip | 256GB Storage</p>
-                    <p class="text-gray-600 mt-1">Qty 1</p>
-                  </div> -->
+                                <h3 class="font-semibold text-lg">iPhone 15 Pro Max</h3>
+                                <p class="text-gray-500 text-sm">A17 Pro Chip | 256GB Storage</p>
+                                <p class="text-gray-600 mt-1">Qty 1</p>
+                              </div> -->
 
                 <!-- Price + Delete -->
                 <!-- <div class="flex flex-col items-end">
-                    <p class="text-lg font-semibold text-gray-900">₦1,200,000</p>
-                    <button class="mt-2 text-red-500 hover:text-red-700 text-xl">🗑️</button>
-                  </div> -->
+                                <p class="text-lg font-semibold text-gray-900">₦1,200,000</p>
+                                <button class="mt-2 text-red-500 hover:text-red-700 text-xl">🗑️</button>
+                              </div> -->
                 <!-- </div> -->
               </div>
 
@@ -440,36 +440,91 @@
                 </button>
               </div>
             </div>
-
-            <!-- Add to Cart Modal Ends-->
           </div>
+        </div>
+      </div>
+      <!--Make sale page Ends-->
 
 
-          <!--Make sale page Ends-->
+      <!---Transaction page start-->
+      <div class=" pages absolute hidden w-full" id="transaction">
+
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-semibold text-gray-800">Transactions</h2>
+
+        </div>
 
 
-          <!---Transaction page start-->
-          <div class=" pages bg-purple-300 absolute hidden" id="transaction">
-            Transaction HERE
-          </div>
-          <!---Transaction page Ends-->
+        <div class="bg-white shadow rounded-t-xl w-full overflow-hidden">
+          <table class="min-w-full border-collapse text-left">
+            <thead class="">
+              <tr class="text-gray-600 bg-gray-200">
+                <th class="px-6 py-3 font-semibold">Invoice ID</th>
+                <th class="px-6 py-3 font-semibold">Product name</th>
+                <th class="px-6 py-3 font-semibold">Amount</th>
+                <th class="px-6 py-3 font-semibold">Payment method</th>
+                <th class="px-6 py-3 font-semibold">Date</th>
+                <th class="px-6 py-3 font-semibold">Status</th>
+                <th class="px-6 py-3 font-semibold">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 font-medium text-gray-900">883</td>
+                <td class="px-6 py-4 text-gray-700">iPhone 15 Pro Max</td>
+                <td class="px-6 py-4 text-gray-900 font-semibold">₦1,200,000</td>
+                <td class="px-6 py-4 text-gray-700">Mobile transfer</td>
+                <td class="px-6 py-4 text-gray-700">12/10/13</td>
+                <td class="px-6 py-4 text-blue-600 font-medium">Completed</td>
+                <td class="px-6 py-4 flex gap-3">
+                  <button class="text-blue-600 hover:text-blue-800">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="text-gray-700 hover:text-black">
+                    <i class="fas fa-download"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 font-medium text-gray-900">154</td>
+                <td class="px-6 py-4 text-gray-700">iPhone 15 Pro Max</td>
+                <td class="px-6 py-4 text-gray-900 font-semibold">₦1,200,000</td>
+                <td class="px-6 py-4 text-gray-700">Card</td>
+                <td class="px-6 py-4 text-gray-700">3/4/16</td>
+                <td class="px-6 py-4 text-blue-600 font-medium">Completed</td>
+                <td class="px-6 py-4 flex gap-3">
+                  <button class="text-blue-600 hover:text-blue-800">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="text-gray-700 hover:text-black">
+                    <i class="fas fa-download"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-          <!--Notifications page start-->
-          <div class="pages bg-pink-300 absolute hidden" id="notifications">
-            Notifications HERE
-          </div>
-          <!--Notifications page Ends-->
 
-          <!--Settings page start-->
-          <div class="pages bg-blue-300 absolute hidden" id="settings">
-            Settings HERE
-          </div>
-          <!--Settings page Ends-->
+      </div>
+      <!---Transaction page Ends-->
 
-          <!--Logout page start-->
-          <div class="pages bg-gray-300 absolute hidden" id="logout">
-            Logout HERE
-          </div>
+      <!--Notifications page start-->
+      <div class="pages bg-pink-300 absolute hidden" id="notifications">
+        Notifications HERE
+      </div>
+      <!--Notifications page Ends-->
+
+      <!--Settings page start-->
+      <div class="pages bg-blue-300 absolute hidden" id="settings">
+        Settings HERE
+      </div>
+      <!--Settings page Ends-->
+
+      <!--Logout page start-->
+      <div class="pages bg-gray-300 absolute hidden" id="logout">
+        Logout HERE
+      </div>
     </main>
 
   </div>
@@ -492,41 +547,28 @@
             <p class="text-[19px] text-gray-500 font-medium my-4">Please Select Your Payment Method</p>
           </div>
           <div>
-            <ul class="flex items-center mb-3 px-4">
 
-              <!-- mobile transfer -->
-              <li class="flex flex-col items-center hover:border-1 hover:border-gray-700 w-[200px]">
-                <div class="text-[60px] text-gray-700 border border-gray-100 transition duration-500 hover:shadow-md">
-                  <i class="fa-solid fa-mobile-screen-button"></i>
-                </div>
+
+            <div class="flex items-center gap-4">
+              <div>
                 <div>
-                  <span class="text-[19px] font-bold hover:text-green-700 text-gray-700">Mobile Transfer</span>
+                  <i></i>
                 </div>
+                <input type="radio" name="paymentMethod" value="Mobile transfer" />
+                <label>Mobile Transfer</label>
+              </div>
 
-              </li>
+              <div>
+                <input type="radio" name="paymentMethod" value="Card" />
+                <label> Card</label>
+              </div>
 
-              <!-- card -->
-              <li
-                class="flex flex-col items-center hover:border-w-[100px] hover:border-1 hover:border-gray-700 w-[200px] border border-gray-100 transition duration-500 hover:shadow-md">
-                <div class="text-[60px] text-gray-700">
-                  <i class="fa-solid fa-credit-card"></i>
-                </div>
-                <div>
-                  <span class="text-[19px] font-bold hover:text-green-700 text-gray-700">Card</span>
-                </div>
-              </li>
+              <div>
+                <input type="radio" name="paymentMethod" value="Cash" />
+                <label> Cash</label>
+              </div>
+            </div>
 
-              <!-- cash -->
-              <li
-                class="flex flex-col items-center hover:border-1 hover:border-gray-700 w-[200px] border border-gray-100 transition duration-500 hover:shadow-md">
-                <div class="text-[60px] text-gray-700">
-                  <i class="fa-solid fa-calendar"></i>
-                </div>
-                <div>
-                  <span class="text-[19px] font-bold hover:text-green-700 text-gray-700">Cash</span>
-                </div>
-              </li>
-            </ul>
           </div>
           <label class="font-medium text-[20px] py-4 text-gray-700" for="">Amout</label>
           <div class="flex border-2 border-gray-400 items-center rounded-lg p-2 mb-3 w-[615px]">

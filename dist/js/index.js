@@ -1551,13 +1551,17 @@ exports.default = MakeSale;
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "paymentModel", ()=>paymentModel);
+parcelHelpers.export(exports, "rendertransaction", ()=>rendertransaction);
 var _baseJs = require("./base.js");
 const paymentModel = ()=>{
     (0, _baseJs.elements).paymentContainer.classList.toggle('hidden');
-} // export const recheckOrder = ()=>{
- //  elements.paymentContainer.classList.add('hiddden')
- // }
-;
+};
+const rendertransaction = (tr)=>{
+    const transactionMakeUp = `
+  
+  
+  `;
+};
 
 },{"./base.js":"4ZOTV","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["4CwNn","ebWYT"], "ebWYT", "parcelRequire94c2", {})
 

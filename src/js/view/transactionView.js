@@ -5,6 +5,9 @@ export const paymentModel=()=>{
   elements.paymentContainer.classList.toggle('hidden')
 }
 
-// export const recheckOrder = ()=>{
-//  elements.paymentContainer.classList.add('hiddden')
-// }
+export const rendertransaction = (tr)=>{
+  const transactionMakeUp = `
+  
+  
+  `
+}
