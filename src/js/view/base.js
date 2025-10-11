@@ -46,7 +46,9 @@ export const elements = {
   checkOutBtn: document.getElementById('checkOutBtn'),
   paymentBtn: document.getElementById('paymentBtn'),
   totalAmountInput: document.getElementById('totalAmountInput'),
-  paymentCanBtn: document.getElementById('paymentCanBtn')
+  paymentCanBtn: document.getElementById('paymentCanBtn'),
+
+  transList: document.getElementById('transList')
 }
 
 export const toggleProfileMenu = () => {

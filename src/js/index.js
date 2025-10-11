@@ -7,7 +7,8 @@ import * as productView from "./view/productView";
 import Product from "./Model/Product.js";
 import * as makeSaleView from "./view/makeSaleView.js";
 import MakeSale from "./Model/MakeSale.js";
-import * as transaction from "./view/transactionView.js"
+import * as transactionView from "./view/transactionView.js"
+import Transaction from "./Model/Transaction.js";
 
 const state = {};
 
@@ -267,17 +268,54 @@ elements.checkOutBtn.addEventListener("click", () =>{
     return;
   }
   elements.totalAmountInput.value = totals.orderTotal.toFixed(2);
-  transaction.paymentModel()
+  transactionView.paymentModel()
 })
 
 elements.paymentCanBtn.addEventListener('click', ()=>{
-   transaction.paymentModel()
+   transactionView.paymentModel()
 })
 
 
 
 elements.paymentBtn.addEventListener('click', ()=>{
-  alert('payment approved')
+  if(!state.Transaction)state.Transaction = new Transaction
+  const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
+  if (!paymentMethod) {
+    alert("Please select a payment method");
+    return;
+  }
+
+  const { orderTotal } = state.MakeSale.calculateTotals();
+  if (orderTotal <= 0) {
+    alert("Cart is empty");
+    return;
+  }
+
+  // Create transaction
+  const invoiceId = Date.now();
+  const date = new Date().toLocaleDateString("en-GB");
+  const status = "Completed";
+
+  state.Transaction.read();
+
+ 
+  state.Transaction.recordTransaction(
+    invoiceId,
+    "Purchase of multiple items",
+    orderTotal,
+    paymentMethod,
+    date,
+    status
+  );
+
+  state.Transaction.persist();
+  state.Transaction.getAllTransactions()
+  transactionView.render();
+
+  // Clear cart
+  makeSaleView.clearCart();
+
+  alert(`Payment Successful via ${paymentMethod}`);
 })
 
 

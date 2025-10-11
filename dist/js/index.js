@@ -679,6 +679,8 @@ var _makeSaleViewJs = require("./view/makeSaleView.js");
 var _makeSaleJs = require("./Model/MakeSale.js");
 var _makeSaleJsDefault = parcelHelpers.interopDefault(_makeSaleJs);
 var _transactionViewJs = require("./view/transactionView.js");
+var _transactionJs = require("./Model/Transaction.js");
+var _transactionJsDefault = parcelHelpers.interopDefault(_transactionJs);
 const state = {};
 // Event listener for profile button
 (0, _baseJs.elements).profileBtn.addEventListener("click", (0, _baseJs.toggleProfileMenu));
@@ -883,7 +885,29 @@ document.getElementById("cartList").addEventListener("click", (e)=>{
     _transactionViewJs.paymentModel();
 });
 (0, _baseJs.elements).paymentBtn.addEventListener('click', ()=>{
-    alert('payment approved');
+    if (!state.Transaction) state.Transaction = new (0, _transactionJsDefault.default);
+    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
+    if (!paymentMethod) {
+        alert("Please select a payment method");
+        return;
+    }
+    const { orderTotal } = state.MakeSale.calculateTotals();
+    if (orderTotal <= 0) {
+        alert("Cart is empty");
+        return;
+    }
+    // Create transaction
+    const invoiceId = Date.now();
+    const date = new Date().toLocaleDateString("en-GB");
+    const status = "Completed";
+    state.Transaction.read();
+    state.Transaction.recordTransaction(invoiceId, "Purchase of multiple items", orderTotal, paymentMethod, date, status);
+    state.Transaction.persist();
+    state.Transaction.getAllTransactions();
+    _transactionViewJs.render();
+    // Clear cart
+    _makeSaleViewJs.clearCart();
+    alert(`Payment Successful via ${paymentMethod}`);
 });
 //On page load
 window.addEventListener('load', (e)=>{
@@ -909,7 +933,7 @@ window.addEventListener('load', (e)=>{
 //load statistics
 });
 
-},{"./view/base.js":"4ZOTV","./view/userView.js":"4aMwY","./Model/User.js":"U3xmt","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./Model/Product.js":"2K9iZ","./view/productView":"3wN6N","./view/makeSaleView.js":"eZc3t","./Model/MakeSale.js":"l0sIG","./view/transactionView.js":"aBom8"}],"4ZOTV":[function(require,module,exports,__globalThis) {
+},{"./view/base.js":"4ZOTV","./view/userView.js":"4aMwY","./Model/User.js":"U3xmt","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./Model/Product.js":"2K9iZ","./view/productView":"3wN6N","./view/makeSaleView.js":"eZc3t","./Model/MakeSale.js":"l0sIG","./view/transactionView.js":"aBom8","./Model/Transaction.js":"4mtzz"}],"4ZOTV":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "elements", ()=>elements);
@@ -959,7 +983,8 @@ const elements = {
     checkOutBtn: document.getElementById('checkOutBtn'),
     paymentBtn: document.getElementById('paymentBtn'),
     totalAmountInput: document.getElementById('totalAmountInput'),
-    paymentCanBtn: document.getElementById('paymentCanBtn')
+    paymentCanBtn: document.getElementById('paymentCanBtn'),
+    transList: document.getElementById('transList')
 };
 const toggleProfileMenu = ()=>{
     elements.dropdownMenu.classList.toggle("hidden");
@@ -1557,12 +1582,65 @@ const paymentModel = ()=>{
     (0, _baseJs.elements).paymentContainer.classList.toggle('hidden');
 };
 const rendertransaction = (tr)=>{
-    const transactionMakeUp = `
+    (0, _baseJs.elements).transList = "";
+    const transMakeUp = `
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 font-medium text-gray-900">${tr.invoiceId}</td>
+                <td class="px-6 py-4 text-gray-700">${tr.productName}</td>
+                <td class="px-6 py-4 text-gray-900 font-semibold">${tr.amount}</td>
+                <td class="px-6 py-4 text-gray-700">${tr.paymentMethod}</td>
+                <td class="px-6 py-4 text-gray-700">${tr.date}</td>
+                <td class="px-6 py-4 text-blue-600 font-medium">${tr.status}</td>
+                <td class="px-6 py-4 flex gap-3">
+                  <button class="text-blue-600 hover:text-blue-800">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="text-gray-700 hover:text-black">
+                    <i class="fas fa-download"></i>
+                  </button>
+                </td>
+              </tr>
   
   
   `;
+    (0, _baseJs.elements).transList.insertAdjacentHTML("beforeend", transMakeUp);
 };
 
-},{"./base.js":"4ZOTV","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["4CwNn","ebWYT"], "ebWYT", "parcelRequire94c2", {})
+},{"./base.js":"4ZOTV","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4mtzz":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+exports.default = class {
+    constructor(){
+        this.transaction = [];
+    }
+    read() {
+        this.transaction = JSON.parse(localStorage.getItem(this.transaction)) || [];
+    }
+    persist() {
+        localStorage.setItem('transaction', JSON.stringify(this.transaction));
+    }
+    recordTransaction(invoiceId, productName, amount, paymentMethod, date, status) {
+        const id = new Date().getTime();
+        const newTransaction = {
+            invoiceId,
+            productName,
+            amount,
+            paymentMethod,
+            date,
+            status,
+            id
+        };
+        this.read();
+        this.transaction.push(newTransaction);
+        this.persist();
+        return newTransaction;
+    }
+    getAllTransaction() {
+        this.read();
+        return this.transaction;
+    }
+};
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["4CwNn","ebWYT"], "ebWYT", "parcelRequire94c2", {})
 
 //# sourceMappingURL=index.js.map
