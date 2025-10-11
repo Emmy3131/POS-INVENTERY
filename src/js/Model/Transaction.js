@@ -18,4 +18,9 @@ export default class{
   this.persist()
   return newTransaction
  }
+ getAllTransaction(){
+  this.read()
+  return this.transaction
+ }
+ 
 }
