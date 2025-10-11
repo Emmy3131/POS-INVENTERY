@@ -13,7 +13,7 @@ export default class MakeSale {
     if(existingItem){
       existingItem.quantity += quantity;
     } else {
-      const item = {name, price, quantity, productImage, id, productId};
+      const item = {name, price, quantity, productImage, id, productId, subTotal: price * quantity};
       this.cart.push(item);
     }
     this.persistCart()
@@ -40,6 +40,7 @@ export default class MakeSale {
     const item = this.cart.find(item => item.id === id)
     if(item){
       item.quantity = newQuantity
+      item.subTotal = item.price * newQuantity
       this.persistCart()
     }
 

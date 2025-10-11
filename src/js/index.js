@@ -171,9 +171,9 @@ document.getElementById("saletList").addEventListener("click", (e)=>{
     const product = state.product.getProduct(id);
     if(!product) return alert("Product not found")
       
-    state.MakeSale.readCart()
-    const alreadyInCart = state.MakeSale.cart.find(item => item.id === product.id); 
-
+    state.MakeSale.readCart()    
+    const alreadyInCart = state.MakeSale.cart.find(item => item.productId === product.id); 
+  
     if (alreadyInCart) {
       // Just increase quantity
       const updateQuantity = state.MakeSale.addToCart(product.name, product.price, 1, product.productImage, product.id);
@@ -277,8 +277,9 @@ elements.paymentCanBtn.addEventListener('click', ()=>{
 
 
 
-elements.paymentBtn.addEventListener('click', ()=>{
-  if(!state.Transaction)state.Transaction = new Transaction
+elements.paymentBtn.addEventListener('click', () => {
+ if(!state.transaction) state.transaction = new Transaction()
+
   const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
   if (!paymentMethod) {
     alert("Please select a payment method");
@@ -291,32 +292,27 @@ elements.paymentBtn.addEventListener('click', ()=>{
     return;
   }
 
-  // Create transaction
   const invoiceId = Date.now();
   const date = new Date().toLocaleDateString("en-GB");
   const status = "Completed";
 
-  state.Transaction.read();
 
- 
-  state.Transaction.recordTransaction(
+  state.transaction.recordTransaction(
     invoiceId,
-    "Purchase of multiple items",
     orderTotal,
     paymentMethod,
     date,
-    status
+    status,
+    items = state.MakeSale.cart
   );
+ const allTransactions = state.transaction.getAllTransactions();
+transactionView.transactionView.render(allTransactions);
 
-  state.Transaction.persist();
-  state.Transaction.getAllTransactions()
-  transactionView.render();
-
-  // Clear cart
-  makeSaleView.clearCart();
+  makeSaleView.clearCartItems();
 
   alert(`Payment Successful via ${paymentMethod}`);
-})
+});
+
 
 
 //On page load
@@ -344,6 +340,12 @@ window.addEventListener('load', e=>{
   //  load orderSummary
     const { subTotal, tax, discount, orderTotal } = makeSale.calculateTotals();
     makeSaleView.orderSummaryTotals(subTotal, tax, discount, orderTotal);
+
+  //load transactions
+  const transaction = new Transaction();
+  transaction.read()
+  const allTransactions = transaction.getAllTransactions();
+  transactionView.transactionView.render(allTransactions);
 
   //load statistics
 })

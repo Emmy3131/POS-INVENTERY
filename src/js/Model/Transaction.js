@@ -1,26 +1,29 @@
 export default class{
   constructor(){
-    this.transaction = []
+    this.transactions = []
   }
  
  read(){
-  this.transaction = JSON.parse(localStorage.getItem(this.transaction)) || []
+  var storage = JSON.parse(localStorage.getItem('transactions'))
+  if(storage)this.transactions = storage
  }
 
  persist(){
-  localStorage.setItem('transaction', JSON.stringify(this.transaction))
+  localStorage.setItem('transactions', JSON.stringify(this.transactions))
  }
- recordTransaction(invoiceId, productName,amount, paymentMethod, date, status){
+ recordTransaction(invoiceId,orderTotal, paymentMethod, date, status, items){
+
   const id = new Date().getTime()
-  const newTransaction = {invoiceId, productName, amount, paymentMethod, date, status, id}
+  const newTransaction = {invoiceId, orderTotal, paymentMethod, date, status,items, id}
+ 
   this.read()
-  this.transaction.push(newTransaction)
+  this.transactions.push(newTransaction)
   this.persist()
   return newTransaction
  }
- getAllTransaction(){
+ getAllTransactions(){
   this.read()
-  return this.transaction
+  return this.transactions
  }
- 
+
 }

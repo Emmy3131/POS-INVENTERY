@@ -802,7 +802,7 @@ document.getElementById("saletList").addEventListener("click", (e)=>{
         const product = state.product.getProduct(id);
         if (!product) return alert("Product not found");
         state.MakeSale.readCart();
-        const alreadyInCart = state.MakeSale.cart.find((item)=>item.id === product.id);
+        const alreadyInCart = state.MakeSale.cart.find((item)=>item.productId === product.id);
         if (alreadyInCart) {
             // Just increase quantity
             const updateQuantity = state.MakeSale.addToCart(product.name, product.price, 1, product.productImage, product.id);
@@ -885,7 +885,7 @@ document.getElementById("cartList").addEventListener("click", (e)=>{
     _transactionViewJs.paymentModel();
 });
 (0, _baseJs.elements).paymentBtn.addEventListener('click', ()=>{
-    if (!state.Transaction) state.Transaction = new (0, _transactionJsDefault.default);
+    if (!state.transaction) state.transaction = new (0, _transactionJsDefault.default)();
     const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
     if (!paymentMethod) {
         alert("Please select a payment method");
@@ -896,17 +896,13 @@ document.getElementById("cartList").addEventListener("click", (e)=>{
         alert("Cart is empty");
         return;
     }
-    // Create transaction
     const invoiceId = Date.now();
     const date = new Date().toLocaleDateString("en-GB");
     const status = "Completed";
-    state.Transaction.read();
-    state.Transaction.recordTransaction(invoiceId, "Purchase of multiple items", orderTotal, paymentMethod, date, status);
-    state.Transaction.persist();
-    state.Transaction.getAllTransactions();
-    _transactionViewJs.render();
-    // Clear cart
-    _makeSaleViewJs.clearCart();
+    state.transaction.recordTransaction(invoiceId, orderTotal, paymentMethod, date, status, items = state.MakeSale.cart);
+    const allTransactions = state.transaction.getAllTransactions();
+    _transactionViewJs.transactionView.render(allTransactions);
+    _makeSaleViewJs.clearCartItems();
     alert(`Payment Successful via ${paymentMethod}`);
 });
 //On page load
@@ -930,6 +926,11 @@ window.addEventListener('load', (e)=>{
     //  load orderSummary
     const { subTotal, tax, discount, orderTotal } = makeSale.calculateTotals();
     _makeSaleViewJs.orderSummaryTotals(subTotal, tax, discount, orderTotal);
+    //load transactions
+    const transaction = new (0, _transactionJsDefault.default)();
+    transaction.read();
+    const allTransactions = transaction.getAllTransactions();
+    _transactionViewJs.transactionView.render(allTransactions);
 //load statistics
 });
 
@@ -1511,7 +1512,8 @@ class MakeSale {
                 quantity,
                 productImage,
                 id,
-                productId
+                productId,
+                subTotal: price * quantity
             };
             this.cart.push(item);
         }
@@ -1536,6 +1538,7 @@ class MakeSale {
         const item = this.cart.find((item)=>item.id === id);
         if (item) {
             item.quantity = newQuantity;
+            item.subTotal = item.price * newQuantity;
             this.persistCart();
         }
         _makeSaleViewJs.updateCartQuantity(id, newQuantity);
@@ -1576,34 +1579,40 @@ exports.default = MakeSale;
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "paymentModel", ()=>paymentModel);
-parcelHelpers.export(exports, "rendertransaction", ()=>rendertransaction);
+parcelHelpers.export(exports, "transactionView", ()=>transactionView);
 var _baseJs = require("./base.js");
 const paymentModel = ()=>{
     (0, _baseJs.elements).paymentContainer.classList.toggle('hidden');
 };
-const rendertransaction = (tr)=>{
-    (0, _baseJs.elements).transList = "";
-    const transMakeUp = `
-              <tr class="hover:bg-gray-50">
-                <td class="px-6 py-4 font-medium text-gray-900">${tr.invoiceId}</td>
-                <td class="px-6 py-4 text-gray-700">${tr.productName}</td>
-                <td class="px-6 py-4 text-gray-900 font-semibold">${tr.amount}</td>
-                <td class="px-6 py-4 text-gray-700">${tr.paymentMethod}</td>
-                <td class="px-6 py-4 text-gray-700">${tr.date}</td>
-                <td class="px-6 py-4 text-blue-600 font-medium">${tr.status}</td>
-                <td class="px-6 py-4 flex gap-3">
-                  <button class="text-blue-600 hover:text-blue-800">
-                    <i class="fas fa-eye"></i>
-                  </button>
-                  <button class="text-gray-700 hover:text-black">
-                    <i class="fas fa-download"></i>
-                  </button>
-                </td>
-              </tr>
-  
-  
-  `;
-    (0, _baseJs.elements).transList.insertAdjacentHTML("beforeend", transMakeUp);
+const transactionView = {
+    render (transactions) {
+        const tableBody = (0, _baseJs.elements).transList;
+        tableBody.innerHTML = ""; // clear existing rows
+        if (!transactions || transactions.length === 0) {
+            tableBody.insertAdjacentHTML("beforeend", `<tr><td colspan="7" class="text-center py-4 text-gray-500">No transactions found</td></tr>`);
+            return;
+        }
+        transactions.forEach((tr)=>{
+            const transMarkup = `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 font-medium text-gray-900">${tr.invoiceId}</td>
+          <td class="px-6 py-4 text-gray-700">${tr.productName}</td>
+          <td class="px-6 py-4 text-gray-900 font-semibold">${tr.orderTotal}</td>
+          <td class="px-6 py-4 text-gray-700">${tr.paymentMethod}</td>
+          <td class="px-6 py-4 text-gray-700">${tr.date}</td>
+          <td class="px-6 py-4 text-blue-600 font-medium">${tr.status}</td>
+          <td class="px-6 py-4 flex gap-3">
+            <button class="text-blue-600 hover:text-blue-800">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button class="text-gray-700 hover:text-black">
+              <i class="fas fa-download"></i>
+            </button>
+          </td>
+        </tr>`;
+            tableBody.insertAdjacentHTML("beforeend", transMarkup);
+        });
+    }
 };
 
 },{"./base.js":"4ZOTV","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4mtzz":[function(require,module,exports,__globalThis) {
@@ -1611,33 +1620,34 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 exports.default = class {
     constructor(){
-        this.transaction = [];
+        this.transactions = [];
     }
     read() {
-        this.transaction = JSON.parse(localStorage.getItem(this.transaction)) || [];
+        var storage = JSON.parse(localStorage.getItem('transactions'));
+        if (storage) this.transactions = storage;
     }
     persist() {
-        localStorage.setItem('transaction', JSON.stringify(this.transaction));
+        localStorage.setItem('transactions', JSON.stringify(this.transactions));
     }
-    recordTransaction(invoiceId, productName, amount, paymentMethod, date, status) {
+    recordTransaction(invoiceId, orderTotal, paymentMethod, date, status, items) {
         const id = new Date().getTime();
         const newTransaction = {
             invoiceId,
-            productName,
-            amount,
+            orderTotal,
             paymentMethod,
             date,
             status,
+            items,
             id
         };
         this.read();
-        this.transaction.push(newTransaction);
+        this.transactions.push(newTransaction);
         this.persist();
         return newTransaction;
     }
-    getAllTransaction() {
+    getAllTransactions() {
         this.read();
-        return this.transaction;
+        return this.transactions;
     }
 };
 
