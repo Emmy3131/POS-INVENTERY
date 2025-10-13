@@ -1,6 +1,6 @@
 export const elements = {
   saleChart:document.getElementById("salesChart"),
-  profileBtn: document.getElementById("profile-btn"),
+  profileBtnicon: document.getElementById("profile-btn"),
   dropdownMenu: document.getElementById("dropdown-menu"),
   navLinks: document.querySelectorAll(".nav-link"),
   addUserBtn: document.getElementById("userAddBtn"),
@@ -53,11 +53,16 @@ export const elements = {
   transDetails: document.getElementById('transDetails'),
   transItems: document.getElementById('transItems'),
   showItems: document.getElementById('showItems'),
+
+  profileBtn: document.getElementById("profileBtn"),
+  passwordBtn: document.getElementById("passwordBtn"),
+  profileSection: document.getElementById("profileSection"),
+  passwordSection: document.getElementById("passwordSection"),
 }
 
 export const toggleProfileMenu = () => {
   elements.dropdownMenu.classList.toggle("hidden");
-  elements.profileBtn.classList.toggle("active");    
+  elements.profileBtnicon.classList.toggle("active");    
 };
 
 export const sidebarLinks =() => {

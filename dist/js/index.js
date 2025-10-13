@@ -681,12 +681,13 @@ var _makeSaleJsDefault = parcelHelpers.interopDefault(_makeSaleJs);
 var _transactionViewJs = require("./view/transactionView.js");
 var _transactionJs = require("./Model/Transaction.js");
 var _transactionJsDefault = parcelHelpers.interopDefault(_transactionJs);
+var _settingsViewJs = require("./view/settingsView.js");
 const state = {};
 // Event listener for profile button
-(0, _baseJs.elements).profileBtn.addEventListener("click", (0, _baseJs.toggleProfileMenu));
+(0, _baseJs.elements).profileBtnicon.addEventListener("click", (0, _baseJs.toggleProfileMenu));
 // Optional: click outside to close
 document.addEventListener("click", (e)=>{
-    if (!(0, _baseJs.elements).profileBtn.contains(e.target) && !(0, _baseJs.elements).dropdownMenu.contains(e.target)) (0, _baseJs.elements).dropdownMenu.classList.add("hidden");
+    if (!(0, _baseJs.elements).profileBtnicon.contains(e.target) && !(0, _baseJs.elements).dropdownMenu.contains(e.target)) (0, _baseJs.elements).dropdownMenu.classList.add("hidden");
 });
 (0, _baseJs.elements).addUserBtn.addEventListener('click', ()=>{
     _userViewJs.showUserCard();
@@ -929,6 +930,13 @@ document.getElementById('transList').addEventListener('click', (e)=>{
         _transactionViewJs.transactionDetailsView(transaction.items);
     }
 });
+// Settings section control
+(0, _baseJs.elements).profileBtn.addEventListener('click', ()=>{
+    _settingsViewJs.profileSectionView();
+});
+(0, _baseJs.elements).passwordBtn.addEventListener('click', ()=>{
+    _settingsViewJs.passwordSectionView();
+});
 //On page load
 window.addEventListener('load', (e)=>{
     //Load users
@@ -958,7 +966,7 @@ window.addEventListener('load', (e)=>{
 //load statistics
 });
 
-},{"./view/base.js":"4ZOTV","./view/userView.js":"4aMwY","./Model/User.js":"U3xmt","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./Model/Product.js":"2K9iZ","./view/productView":"3wN6N","./view/makeSaleView.js":"eZc3t","./Model/MakeSale.js":"l0sIG","./view/transactionView.js":"aBom8","./Model/Transaction.js":"4mtzz"}],"4ZOTV":[function(require,module,exports,__globalThis) {
+},{"./view/base.js":"4ZOTV","./view/userView.js":"4aMwY","./Model/User.js":"U3xmt","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./Model/Product.js":"2K9iZ","./view/productView":"3wN6N","./view/makeSaleView.js":"eZc3t","./Model/MakeSale.js":"l0sIG","./view/transactionView.js":"aBom8","./Model/Transaction.js":"4mtzz","./view/settingsView.js":"elyYT"}],"4ZOTV":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "elements", ()=>elements);
@@ -967,7 +975,7 @@ parcelHelpers.export(exports, "sidebarLinks", ()=>sidebarLinks);
 parcelHelpers.export(exports, "makeSaleCart", ()=>makeSaleCart);
 const elements = {
     saleChart: document.getElementById("salesChart"),
-    profileBtn: document.getElementById("profile-btn"),
+    profileBtnicon: document.getElementById("profile-btn"),
     dropdownMenu: document.getElementById("dropdown-menu"),
     navLinks: document.querySelectorAll(".nav-link"),
     addUserBtn: document.getElementById("userAddBtn"),
@@ -1013,11 +1021,15 @@ const elements = {
     transList: document.getElementById('transList'),
     transDetails: document.getElementById('transDetails'),
     transItems: document.getElementById('transItems'),
-    showItems: document.getElementById('showItems')
+    showItems: document.getElementById('showItems'),
+    profileBtn: document.getElementById("profileBtn"),
+    passwordBtn: document.getElementById("passwordBtn"),
+    profileSection: document.getElementById("profileSection"),
+    passwordSection: document.getElementById("passwordSection")
 };
 const toggleProfileMenu = ()=>{
     elements.dropdownMenu.classList.toggle("hidden");
-    elements.profileBtn.classList.toggle("active");
+    elements.profileBtnicon.classList.toggle("active");
 };
 const sidebarLinks = ()=>{
     elements.navLinks.forEach((link)=>{
@@ -1725,6 +1737,27 @@ exports.default = class {
     }
 };
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["4CwNn","ebWYT"], "ebWYT", "parcelRequire94c2", {})
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"elyYT":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "profileSectionView", ()=>profileSectionView);
+parcelHelpers.export(exports, "passwordSectionView", ()=>passwordSectionView);
+var _baseJs = require("./base.js");
+const profileSectionView = ()=>{
+    (0, _baseJs.elements).profileSection.classList.remove("hidden");
+    (0, _baseJs.elements).passwordSection.classList.add("hidden");
+    (0, _baseJs.elements).profileBtn.classList.add("bg-green-900", "text-white");
+    (0, _baseJs.elements).passwordBtn.classList.remove("bg-green-900", "text-white");
+    (0, _baseJs.elements).passwordBtn.classList.add("text-gray-700");
+};
+const passwordSectionView = ()=>{
+    (0, _baseJs.elements).passwordSection.classList.remove("hidden");
+    (0, _baseJs.elements).profileSection.classList.add("hidden");
+    (0, _baseJs.elements).passwordBtn.classList.add("bg-green-900", "text-white");
+    (0, _baseJs.elements).profileBtn.classList.remove("bg-green-900", "text-white");
+    (0, _baseJs.elements).profileBtn.classList.add("text-gray-700");
+};
+
+},{"./base.js":"4ZOTV","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["4CwNn","ebWYT"], "ebWYT", "parcelRequire94c2", {})
 
 //# sourceMappingURL=index.js.map

@@ -9,16 +9,17 @@ import * as makeSaleView from "./view/makeSaleView.js";
 import MakeSale from "./Model/MakeSale.js";
 import * as transactionView from "./view/transactionView.js"
 import Transaction from "./Model/Transaction.js";
+import * as settingsView from "./view/settingsView.js";
 
 const state = {};
 
 
 
 // Event listener for profile button
-elements.profileBtn.addEventListener("click", toggleProfileMenu);
+elements.profileBtnicon.addEventListener("click", toggleProfileMenu);
 // Optional: click outside to close
 document.addEventListener("click", (e) => {
-  if (!elements.profileBtn.contains(e.target) && !elements.dropdownMenu.contains(e.target)) {
+  if (!elements.profileBtnicon.contains(e.target) && !elements.dropdownMenu.contains(e.target)) {
     elements.dropdownMenu.classList.add("hidden");
   }
 });
@@ -337,6 +338,15 @@ document.getElementById('transList').addEventListener('click', (e)=>{
     console.log('Transaction Items:', transaction.items);
     transactionView.transactionDetailsView(transaction.items)
   }
+})
+
+
+// Settings section control
+elements.profileBtn.addEventListener('click', ()=>{
+  settingsView.profileSectionView()
+})
+elements.passwordBtn.addEventListener('click', ()=>{
+  settingsView.passwordSectionView()
 })
 
 
