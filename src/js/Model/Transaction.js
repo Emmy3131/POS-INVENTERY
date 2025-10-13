@@ -11,10 +11,10 @@ export default class{
  persist(){
   localStorage.setItem('transactions', JSON.stringify(this.transactions))
  }
- recordTransaction(invoiceId,orderTotal, paymentMethod, date, status, items){
+ recordTransaction(invoiceId, productName, orderTotal, paymentMethod, date, status, items){
 
   const id = new Date().getTime()
-  const newTransaction = {invoiceId, orderTotal, paymentMethod, date, status,items, id}
+  const newTransaction = {invoiceId, productName, orderTotal, paymentMethod, date, status,items, id}
  
   this.read()
   this.transactions.push(newTransaction)

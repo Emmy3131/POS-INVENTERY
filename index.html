@@ -84,13 +84,9 @@
         <a href="#transaction"
           class="nav-link flex flex-col items-center gap-3 px-6 py-2 text-gray-600  hover:bg-black hover:text-green-400 rounded-lg">
           <span class="material-icons">account_balance_wallet</span>
-          <span>Transaction</span>
+          <span>Transactions</span>
         </a>
-        <a href="#notifications"
-          class="nav-link flex flex-col items-center gap-3 px-6 py-2 text-gray-600  hover:bg-black hover:text-green-400 rounded-lg">
-          <span class="material-icons">notifications</span>
-          <span>Notifications</span>
-        </a>
+
         <a href="#settings"
           class="nav-link flex flex-col items-center gap-3 px-6 py-2 text-gray-600  hover:bg-black hover:text-green-400 rounded-lg">
           <span class="material-icons">settings</span>
@@ -392,30 +388,11 @@
             <div class="flex flex-col lg:flex-row gap-6">
               <!-- Left: Cart Items -->
               <div class="flex-1  overflow-hidden " id="cartList">
-                <!-- Cart Item -->
-                <!-- <div  class="flex items-center bg-white shadow rounded-xl p-4 mb-4"> -->
-                <!-- Image -->
-                <!-- <div class="w-32 h-28 flex-shrink-0">
-                                <img src="iphone.png" alt="iPhone 15 Pro Max" class="object-cover w-full h-full rounded-lg">
-                              </div> -->
-
-                <!-- Item Info -->
-                <!-- <div class="ml-4">
-                                <h3 class="font-semibold text-lg">iPhone 15 Pro Max</h3>
-                                <p class="text-gray-500 text-sm">A17 Pro Chip | 256GB Storage</p>
-                                <p class="text-gray-600 mt-1">Qty 1</p>
-                              </div> -->
-
-                <!-- Price + Delete -->
-                <!-- <div class="flex flex-col items-end">
-                                <p class="text-lg font-semibold text-gray-900">₦1,200,000</p>
-                                <button class="mt-2 text-red-500 hover:text-red-700 text-xl">🗑️</button>
-                              </div> -->
-                <!-- </div> -->
+                <!-- Cart items here -->
               </div>
 
               <!-- Right: Order Summary -->
-              <div class="w-full lg:w-[300px] bg-white shadow rounded-xl p-6 h-fit">
+              <div id="orderSummary" class="w-full lg:w-[300px] bg-white shadow rounded-xl p-6 h-fit">
                 <h3 class="text-lg font-semibold mb-4">Order summary</h3>
                 <div class="flex justify-between mb-2 text-gray-700">
                   <span>Subtotal</span>
@@ -469,7 +446,7 @@
               </tr>
             </thead>
             <tbody id="transList" class="divide-y divide-gray-200">
-              <tr class="hover:bg-gray-50">
+              <!-- <tr class="hover:bg-gray-50">
                 <td class="px-6 py-4 font-medium text-gray-900">883</td>
                 <td class="px-6 py-4 text-gray-700">iPhone 15 Pro Max</td>
                 <td class="px-6 py-4 text-gray-900 font-semibold">₦1,200,000</td>
@@ -484,25 +461,31 @@
                     <i class="fas fa-download"></i>
                   </button>
                 </td>
-              </tr>
-              <!-- <tr class="hover:bg-gray-50">
-                <td class="px-6 py-4 font-medium text-gray-900">154</td>
-                <td class="px-6 py-4 text-gray-700">iPhone 15 Pro Max</td>
-                <td class="px-6 py-4 text-gray-900 font-semibold">₦1,200,000</td>
-                <td class="px-6 py-4 text-gray-700">Card</td>
-                <td class="px-6 py-4 text-gray-700">3/4/16</td>
-                <td class="px-6 py-4 text-blue-600 font-medium">Completed</td>
-                <td class="px-6 py-4 flex gap-3">
-                  <button class="text-blue-600 hover:text-blue-800">
-                    <i class="fas fa-eye"></i>
-                  </button>
-                  <button class="text-gray-700 hover:text-black">
-                    <i class="fas fa-download"></i>
-                  </button>
-                </td>
               </tr> -->
+
             </tbody>
           </table>
+        </div>
+
+        <!-- transaction details model -->
+        <div id="transItems" class="w-[400px] h-screen m-auto fixed top-0 left-0 bg-gray-400 p-5  z-20 hidden">
+
+          <!-- transaction details here -->
+          <div id="showItems" class="flex items-center bg-white shadow rounded-xl p-4 mb-4">
+            <!-- Image -->
+            <div class="w-32 h-28 flex-shrink-0">
+              <img src="iphone.png" alt="iPhone 15 Pro Max" class="object-cover w-full h-full rounded-lg">
+            </div>
+
+
+            <div class="ml-4">
+              <h3 class="font-semibold text-lg">iPhone 15 Pro Max</h3>
+              <p class="text-gray-500 text-sm">A17 Pro Chip | 256GB Storage</p>
+              <p class="text-gray-600 mt-1">Qty 1</p>
+              <p class="text-gray-600 mt-1">1122000</p>
+            </div>
+          </div>
+
         </div>
 
 
@@ -549,24 +532,48 @@
           <div>
 
 
-            <div class="flex items-center gap-4">
-              <div>
-                <div>
-                  <i></i>
-                </div>
-                <input type="radio" name="paymentMethod" value="Mobile transfer" />
-                <label>Mobile Transfer</label>
+            <div class="flex gap-6 justify-center items-center my-6 animate-fadeInUp">
+              <div class="flex gap-6 justify-center items-center my-6">
+                <!-- CARD OPTION -->
+                <label for="cardPayment"
+                  class="flex flex-col items-center w-[180px] bg-white shadow-md rounded-2xl p-4 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg hover:bg-green-50 peer-checked:bg-green-100">
+                  <div class="text-[50px] text-green-600 transition-transform duration-300 group-hover:rotate-6">
+                    <i class="fa-solid fa-credit-card"></i>
+                  </div>
+                  <input type="radio" id="cardPayment" name="paymentMethod" value="Card" class="hidden peer" />
+                  <span
+                    class="mt-2 font-semibold text-gray-700 peer-checked:text-green-800 transition-colors duration-300">
+                    Card
+                  </span>
+                </label>
+
+                <!-- CASH OPTION -->
+                <label for="cashPayment"
+                  class="flex flex-col items-center w-[180px] bg-white shadow-md rounded-2xl p-4 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg hover:bg-green-50 peer-checked:bg-green-100">
+                  <div class="text-[50px] text-green-600 transition-transform duration-300 group-hover:rotate-6">
+                    <i class="fa-solid fa-money-bill"></i>
+                  </div>
+                  <input type="radio" id="cashPayment" name="paymentMethod" value="Cash" class="hidden peer" />
+                  <span
+                    class="mt-2 font-semibold text-gray-700 peer-checked:text-green-600 transition-colors duration-300">
+                    Cash
+                  </span>
+                </label>
+
+                <!-- TRANSFER OPTION -->
+                <label for="transferPayment"
+                  class="flex flex-col items-center w-[180px] bg-white shadow-md rounded-2xl p-4 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg hover:bg-green-50 peer-checked:bg-green-100">
+                  <div class="text-[50px] text-green-600 transition-transform duration-300 group-hover:rotate-6">
+                    <i class="fa-solid fa-building-columns"></i>
+                  </div>
+                  <input type="radio" id="transferPayment" name="paymentMethod" value="Transfer" class="hidden peer" />
+                  <span
+                    class="mt-2 font-semibold text-gray-700 peer-checked:text-green-800 transition-colors duration-300">
+                    Bank Transfer
+                  </span>
+                </label>
               </div>
 
-              <div>
-                <input type="radio" name="paymentMethod" value="Card" />
-                <label> Card</label>
-              </div>
-
-              <div>
-                <input type="radio" name="paymentMethod" value="Cash" />
-                <label> Cash</label>
-              </div>
             </div>
 
           </div>
@@ -578,7 +585,7 @@
           <!-- Button -->
           <div id='paymentBtnContainer'>
             <button id="paymentBtn" type="submit"
-              class="outline-none py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 shadow-md w-full text-center transition font-bold text-2xl">
+              class="outline-none py-2 rounded-lg bg-green-800 text-white hover:bg-green-700 shadow-md w-full text-center transition font-bold text-2xl">
               Pay Now
             </button>
           </div>

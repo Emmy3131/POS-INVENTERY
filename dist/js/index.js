@@ -867,7 +867,7 @@ document.getElementById("cartList").addEventListener("click", (e)=>{
     if (!state.MakeSale) state.MakeSale = new (0, _makeSaleJsDefault.default)();
     state.MakeSale.clearCart();
     _makeSaleViewJs.clearCartItems();
-    _makeSaleViewJs.updateSummary(0, 0);
+    _makeSaleViewJs.clearOrderSummary();
     alert("Cart cleared successfully");
 });
 (0, _baseJs.elements).checkOutBtn.addEventListener("click", ()=>{
@@ -899,11 +899,35 @@ document.getElementById("cartList").addEventListener("click", (e)=>{
     const invoiceId = Date.now();
     const date = new Date().toLocaleDateString("en-GB");
     const status = "Completed";
-    state.transaction.recordTransaction(invoiceId, orderTotal, paymentMethod, date, status, items = state.MakeSale.cart);
+    const items = state.MakeSale.cart.map((item)=>({
+            productName: item.name,
+            productImage: item.productImage,
+            quantity: item.quantity,
+            price: item.price
+        }));
+    state.transaction.recordTransaction(invoiceId, state.MakeSale.cart.map((item)=>item.name).join(", "), orderTotal, paymentMethod, date, status, items);
     const allTransactions = state.transaction.getAllTransactions();
     _transactionViewJs.transactionView.render(allTransactions);
+    state.MakeSale.clearCart();
     _makeSaleViewJs.clearCartItems();
+    _makeSaleViewJs.clearOrderSummary();
+    const selected = document.querySelector('input[name="paymentMethod"]:checked').checked = false;
+    if (selected) selected.checked = false;
+    // Close payment modal
     alert(`Payment Successful via ${paymentMethod}`);
+    _transactionViewJs.paymentModel();
+});
+document.getElementById('transList').addEventListener('click', (e)=>{
+    if (e.target.closest('#transDetails')) {
+        _transactionViewJs.itemDetailsMOdel();
+        const row = e.target.closest('tr');
+        const id = row.id;
+        if (!state.transaction) state.transaction = new (0, _transactionJsDefault.default)();
+        state.transaction.read();
+        const transaction = state.transaction.transactions.find((tr)=>tr.id === parseInt(id));
+        console.log('Transaction Items:', transaction.items);
+        _transactionViewJs.transactionDetailsView(transaction.items);
+    }
 });
 //On page load
 window.addEventListener('load', (e)=>{
@@ -980,12 +1004,16 @@ const elements = {
     tax: document.getElementById("tax"),
     discount: document.getElementById("discount"),
     orderTotal: document.getElementById("orderTotal"),
+    orderSummary: document.getElementById("orderSummary"),
     paymentContainer: document.getElementById('paymentContainer'),
     checkOutBtn: document.getElementById('checkOutBtn'),
     paymentBtn: document.getElementById('paymentBtn'),
     totalAmountInput: document.getElementById('totalAmountInput'),
     paymentCanBtn: document.getElementById('paymentCanBtn'),
-    transList: document.getElementById('transList')
+    transList: document.getElementById('transList'),
+    transDetails: document.getElementById('transDetails'),
+    transItems: document.getElementById('transItems'),
+    showItems: document.getElementById('showItems')
 };
 const toggleProfileMenu = ()=>{
     elements.dropdownMenu.classList.toggle("hidden");
@@ -1404,6 +1432,17 @@ const initCartPage = ()=>{
     });
 };
 const renderCartItem = (item)=>{
+    const cartList = document.getElementById("cartList");
+    if (!cartList || cartList.length === 0) {
+        (0, _baseJs.elements).clearCartBtn.classList.add('hidden');
+        (0, _baseJs.elements).orderSummary.classList.add('hidden');
+        (0, _baseJs.elements).checkOutBtn.classList.add('hidden');
+        cartList.insertAdjacentHTML("beforeend", `<p class="text-gray-500 text-center py-4">Your cart is empty.</p>`);
+        return;
+    }
+    (0, _baseJs.elements).clearCartBtn.classList.remove('hidden');
+    (0, _baseJs.elements).orderSummary.classList.remove('hidden');
+    (0, _baseJs.elements).checkOutBtn.classList.remove('hidden');
     const cartItemId = `cart-item-${item.id}`;
     const cartItemMarkup = `
               <div class="cart-item flex items-center bg-white shadow rounded-xl p-4 mb-4 overflow-hidden" id='${cartItemId}'>
@@ -1463,6 +1502,10 @@ const deleteCartItem = (id)=>{
 };
 const clearCartItems = ()=>{
     document.getElementById("cartList").innerHTML = "";
+    (0, _baseJs.elements).clearCartBtn.classList.add('hidden');
+    (0, _baseJs.elements).orderSummary.classList.add('hidden');
+    (0, _baseJs.elements).checkOutBtn.classList.add('hidden');
+    document.getElementById('cartList').innerHTML = `<p class="text-gray-500 text-center py-4">Your cart is empty.</p>`;
 };
 const updateCartQuantity = (id, newQuantity)=>{
     const cartItem = document.getElementById(`cart-item-${id}`);
@@ -1579,10 +1622,40 @@ exports.default = MakeSale;
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "paymentModel", ()=>paymentModel);
+parcelHelpers.export(exports, "itemDetailsMOdel", ()=>itemDetailsMOdel);
+parcelHelpers.export(exports, "transactionDetailsView", ()=>transactionDetailsView);
 parcelHelpers.export(exports, "transactionView", ()=>transactionView);
 var _baseJs = require("./base.js");
 const paymentModel = ()=>{
     (0, _baseJs.elements).paymentContainer.classList.toggle('hidden');
+};
+const itemDetailsMOdel = ()=>{
+    (0, _baseJs.elements).transItems.classList.toggle('hidden');
+};
+const transactionDetailsView = (items)=>{
+    const container = (0, _baseJs.elements).transItems;
+    container.innerHTML = ""; // ✅ Clear old items before rendering new ones
+    if (!items || items.length === 0) {
+        container.insertAdjacentHTML("beforeend", `<p class="text-center text-gray-500 py-4">No items found</p>`);
+        return;
+    }
+    items.forEach((item)=>{
+        const itemMarkup = `
+      <div class="flex items-center bg-gray-50 p-3 rounded-lg shadow-sm mb-3">
+        <div class="w-24 h-20 flex-shrink-0">
+          <img src="${item.productImage || 'https://via.placeholder.com/100'}" 
+               alt="${item.productName || 'Product'}" 
+               class="object-cover w-full h-full rounded-md border border-gray-200">
+        </div>
+        <div class="ml-4 flex-1">
+          <h3 class="truncate w-32 font-semibold text-gray-800">${item.productName || 'Unnamed Product'}</h3>
+          <p class="text-gray-600 text-sm">Qty: ${item.quantity || 1}</p>
+          <p class="text-gray-800 font-medium mt-1">\u{20A6}${item.price || 0}</p>
+        </div>
+      </div>
+    `;
+        container.insertAdjacentHTML("beforeend", itemMarkup);
+    });
 };
 const transactionView = {
     render (transactions) {
@@ -1594,7 +1667,7 @@ const transactionView = {
         }
         transactions.forEach((tr)=>{
             const transMarkup = `
-        <tr class="hover:bg-gray-50">
+        <tr id="${tr.id}" class="hover:bg-gray-50">
           <td class="px-6 py-4 font-medium text-gray-900">${tr.invoiceId}</td>
           <td class="px-6 py-4 text-gray-700">${tr.productName}</td>
           <td class="px-6 py-4 text-gray-900 font-semibold">${tr.orderTotal}</td>
@@ -1602,7 +1675,7 @@ const transactionView = {
           <td class="px-6 py-4 text-gray-700">${tr.date}</td>
           <td class="px-6 py-4 text-blue-600 font-medium">${tr.status}</td>
           <td class="px-6 py-4 flex gap-3">
-            <button class="text-blue-600 hover:text-blue-800">
+            <button id="transDetails" class="text-blue-600 hover:text-blue-800">
               <i class="fas fa-eye"></i>
             </button>
             <button class="text-gray-700 hover:text-black">
@@ -1629,10 +1702,11 @@ exports.default = class {
     persist() {
         localStorage.setItem('transactions', JSON.stringify(this.transactions));
     }
-    recordTransaction(invoiceId, orderTotal, paymentMethod, date, status, items) {
+    recordTransaction(invoiceId, productName, orderTotal, paymentMethod, date, status, items) {
         const id = new Date().getTime();
         const newTransaction = {
             invoiceId,
+            productName,
             orderTotal,
             paymentMethod,
             date,

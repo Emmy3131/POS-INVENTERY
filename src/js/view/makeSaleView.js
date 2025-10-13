@@ -21,7 +21,21 @@ export const initCartPage = () => {
   });
 };
 
-export const renderCartItem = (item) => {
+export const renderCartItem = (item) => { 
+  const cartList = document.getElementById("cartList");
+  if(!cartList || cartList.length === 0 ){
+    elements.clearCartBtn.classList.add('hidden')
+    elements.orderSummary.classList.add('hidden')
+    elements.checkOutBtn.classList.add('hidden')
+
+
+    cartList.insertAdjacentHTML("beforeend", `<p class="text-gray-500 text-center py-4">Your cart is empty.</p>`);
+     return;
+  }
+  elements.clearCartBtn.classList.remove('hidden')
+  elements.orderSummary.classList.remove('hidden')
+  elements.checkOutBtn.classList.remove('hidden')
+
   const cartItemId = `cart-item-${item.id}`; 
   const cartItemMarkup = `
               <div class="cart-item flex items-center bg-white shadow rounded-xl p-4 mb-4 overflow-hidden" id='${cartItemId}'>
@@ -88,6 +102,11 @@ export const deleteCartItem = (id) => {
 
 export const clearCartItems = () => {
   document.getElementById("cartList").innerHTML = "";
+ 
+  elements.clearCartBtn.classList.add('hidden')
+  elements.orderSummary.classList.add('hidden')
+  elements.checkOutBtn.classList.add('hidden')
+  document.getElementById('cartList').innerHTML = `<p class="text-gray-500 text-center py-4">Your cart is empty.</p>`;
 }
 
 export const updateCartQuantity = (id, newQuantity) => {

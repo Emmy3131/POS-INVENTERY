@@ -231,7 +231,6 @@ document.getElementById("cartList").addEventListener("click", (e) => {
       const { subTotal, tax, discount, orderTotal } = state.MakeSale.calculateTotals();
       makeSaleView.orderSummaryTotals(subTotal, tax, discount, orderTotal);
     }
-
    }
   }
 
@@ -253,7 +252,7 @@ elements.clearCartBtn.addEventListener("click", ()=>{
   if(!state.MakeSale) state.MakeSale = new MakeSale();
   state.MakeSale.clearCart()
   makeSaleView.clearCartItems()
-  makeSaleView.updateSummary(0, 0)
+  makeSaleView.clearOrderSummary()
   alert("Cart cleared successfully")
 });
 
@@ -296,22 +295,49 @@ elements.paymentBtn.addEventListener('click', () => {
   const date = new Date().toLocaleDateString("en-GB");
   const status = "Completed";
 
+   const items = state.MakeSale.cart.map(item => ({
+    productName: item.name,
+    productImage: item.productImage,
+    quantity: item.quantity,
+    price: item.price
+  }));
 
   state.transaction.recordTransaction(
     invoiceId,
+    state.MakeSale.cart.map(item => item.name).join(", "),
     orderTotal,
     paymentMethod,
     date,
     status,
-    items = state.MakeSale.cart
+    items
   );
+  
  const allTransactions = state.transaction.getAllTransactions();
 transactionView.transactionView.render(allTransactions);
 
+  state.MakeSale.clearCart();
   makeSaleView.clearCartItems();
-
+  makeSaleView.clearOrderSummary();
+  const selected = document.querySelector('input[name="paymentMethod"]:checked').checked = false;
+  if(selected) selected.checked = false;
+  
+  // Close payment modal
   alert(`Payment Successful via ${paymentMethod}`);
+  transactionView.paymentModel();
 });
+
+document.getElementById('transList').addEventListener('click', (e)=>{
+  if(e.target.closest('#transDetails')){
+    transactionView.itemDetailsMOdel();
+    const row = e.target.closest('tr');
+    const id = row.id;
+    if(!state.transaction) state.transaction = new Transaction()
+    state.transaction.read()
+    const transaction = state.transaction.transactions.find(tr=> tr.id === parseInt(id))
+    console.log('Transaction Items:', transaction.items);
+    transactionView.transactionDetailsView(transaction.items)
+  }
+})
 
 
 
@@ -340,6 +366,8 @@ window.addEventListener('load', e=>{
   //  load orderSummary
     const { subTotal, tax, discount, orderTotal } = makeSale.calculateTotals();
     makeSaleView.orderSummaryTotals(subTotal, tax, discount, orderTotal);
+
+   
 
   //load transactions
   const transaction = new Transaction();

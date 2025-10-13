@@ -41,6 +41,7 @@ export const elements = {
   tax: document.getElementById("tax"),
   discount: document.getElementById("discount"),
   orderTotal: document.getElementById("orderTotal"),
+  orderSummary: document.getElementById("orderSummary"),
 
   paymentContainer: document.getElementById('paymentContainer'),
   checkOutBtn: document.getElementById('checkOutBtn'),
@@ -48,7 +49,10 @@ export const elements = {
   totalAmountInput: document.getElementById('totalAmountInput'),
   paymentCanBtn: document.getElementById('paymentCanBtn'),
 
-  transList: document.getElementById('transList')
+  transList: document.getElementById('transList'),
+  transDetails: document.getElementById('transDetails'),
+  transItems: document.getElementById('transItems'),
+  showItems: document.getElementById('showItems'),
 }
 
 export const toggleProfileMenu = () => {
