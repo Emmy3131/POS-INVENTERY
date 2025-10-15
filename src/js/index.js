@@ -38,6 +38,23 @@ elements.loginBtn.addEventListener('click', (e) => {
   }
 });
 
+elements.loggedOut.addEventListener('click', () => {
+  if (!state.auth) state.auth = new Authentication();
+
+ 
+  const confirmLogout = confirm("Are you sure you want to log out?");
+  
+  if (confirmLogout) {
+    state.auth.logout();
+    document.getElementById('loginPage').classList.remove('hidden');
+    document.getElementById('mainApp').classList.add('hidden');
+  } else {
+  
+    alert("Logout cancelled.");
+  }
+});
+
+
 
 // Event listener for profile button
 elements.profileBtnicon.addEventListener("click", toggleProfileMenu);
@@ -377,6 +394,20 @@ elements.passwordBtn.addEventListener('click', ()=>{
 
 //On page load
 window.addEventListener('load', e=>{
+  if(!state.auth) state.auth = new Authentication();
+  const isLoggedIn = state.auth.isloggedIn();
+  if(isLoggedIn){
+    document.getElementById('loginPage').classList.add('hidden');
+    document.getElementById('mainApp').classList.remove('hidden');
+
+    const user = state.auth.getLoggedInUser();
+    if(user) settingsView.displayUserProfile(user);
+    alert(`Welcome back, ${user.name}!`);
+  }else{
+    document.getElementById('loginPage').classList.remove('hidden');
+    document.getElementById('mainApp').classList.add('hidden');
+  }
+
   //Load users
   const user = new User();
   user.readUsers()

@@ -62,7 +62,10 @@ export const elements = {
   loginEmail: document.getElementById('loginEmail'),
   loginPassword: document.getElementById('loginPassword'),
   togglePassword: document.getElementById('togglePassword'),
-  loginBtn: document.getElementById('loginBtn')
+  loginBtn: document.getElementById('loginBtn'),
+  loginPage: document.getElementById('loginPage'),
+  mainApp: document.getElementById('mainApp'),
+  loggedOut: document.getElementById('loggedOut')
 
 }
 

@@ -700,6 +700,15 @@ const state = {};
         } else alert("Invalid email or password");
     } else alert("Please fill in all required fields.");
 });
+(0, _baseJs.elements).loggedOut.addEventListener('click', ()=>{
+    if (!state.auth) state.auth = new (0, _authJsDefault.default)();
+    const confirmLogout = confirm("Are you sure you want to log out?");
+    if (confirmLogout) {
+        state.auth.logout();
+        document.getElementById('loginPage').classList.remove('hidden');
+        document.getElementById('mainApp').classList.add('hidden');
+    } else alert("Logout cancelled.");
+});
 // Event listener for profile button
 (0, _baseJs.elements).profileBtnicon.addEventListener("click", (0, _baseJs.toggleProfileMenu));
 // Optional: click outside to close
@@ -956,6 +965,18 @@ document.getElementById('transList').addEventListener('click', (e)=>{
 });
 //On page load
 window.addEventListener('load', (e)=>{
+    if (!state.auth) state.auth = new (0, _authJsDefault.default)();
+    const isLoggedIn = state.auth.isloggedIn();
+    if (isLoggedIn) {
+        document.getElementById('loginPage').classList.add('hidden');
+        document.getElementById('mainApp').classList.remove('hidden');
+        const user = state.auth.getLoggedInUser();
+        if (user) _settingsViewJs.displayUserProfile(user);
+        alert(`Welcome back, ${user.name}!`);
+    } else {
+        document.getElementById('loginPage').classList.remove('hidden');
+        document.getElementById('mainApp').classList.add('hidden');
+    }
     //Load users
     const user = new (0, _userJsDefault.default)();
     user.readUsers();
@@ -1046,7 +1067,10 @@ const elements = {
     loginEmail: document.getElementById('loginEmail'),
     loginPassword: document.getElementById('loginPassword'),
     togglePassword: document.getElementById('togglePassword'),
-    loginBtn: document.getElementById('loginBtn')
+    loginBtn: document.getElementById('loginBtn'),
+    loginPage: document.getElementById('loginPage'),
+    mainApp: document.getElementById('mainApp'),
+    loggedOut: document.getElementById('loggedOut')
 };
 const toggleProfileMenu = ()=>{
     elements.dropdownMenu.classList.toggle("hidden");
