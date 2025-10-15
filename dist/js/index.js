@@ -966,13 +966,19 @@ document.getElementById('transList').addEventListener('click', (e)=>{
 //On page load
 window.addEventListener('load', (e)=>{
     if (!state.auth) state.auth = new (0, _authJsDefault.default)();
-    const isLoggedIn = state.auth.isloggedIn();
+    const isLoggedIn = state.auth.isLoggedIn();
     if (isLoggedIn) {
         document.getElementById('loginPage').classList.add('hidden');
         document.getElementById('mainApp').classList.remove('hidden');
         const user = state.auth.getLoggedInUser();
-        if (user) _settingsViewJs.displayUserProfile(user);
-        alert(`Welcome back, ${user.name}!`);
+        if (user) {
+            const welcomeMassage = document.getElementById('welcomeMassage');
+            const userProfilePic = document.getElementById('userProfilePic');
+            if (welcomeMassage) welcomeMassage.textContent = `Welcome back, ${user.name}!`;
+            if (userProfilePic) userProfilePic.src = user.profileImage;
+            if (_settingsViewJs && typeof _settingsViewJs.loadProfile === 'function') _settingsViewJs.loadProfile(user);
+        }
+        alert(`Welcome back, ${user.name || 'User'}!`);
     } else {
         document.getElementById('loginPage').classList.remove('hidden');
         document.getElementById('mainApp').classList.add('hidden');
@@ -1852,7 +1858,7 @@ class Authentication {
     getLoggedInUser() {
         return JSON.parse(localStorage.getItem('loggedInUser'));
     }
-    isloggedIn() {
+    isLoggedIn() {
         return localStorage.getItem('loggedInUser') !== null;
     }
 }

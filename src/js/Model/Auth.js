@@ -26,7 +26,7 @@ export default class Authentication{
     return JSON.parse(localStorage.getItem('loggedInUser'));
   }
 
-  isloggedIn(){
+  isLoggedIn(){
     return localStorage.getItem('loggedInUser') !== null;
   }
 }

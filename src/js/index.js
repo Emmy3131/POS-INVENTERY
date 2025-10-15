@@ -395,14 +395,26 @@ elements.passwordBtn.addEventListener('click', ()=>{
 //On page load
 window.addEventListener('load', e=>{
   if(!state.auth) state.auth = new Authentication();
-  const isLoggedIn = state.auth.isloggedIn();
+  const isLoggedIn = state.auth.isLoggedIn();
   if(isLoggedIn){
     document.getElementById('loginPage').classList.add('hidden');
     document.getElementById('mainApp').classList.remove('hidden');
 
     const user = state.auth.getLoggedInUser();
-    if(user) settingsView.displayUserProfile(user);
-    alert(`Welcome back, ${user.name}!`);
+    if(user){
+      const welcomeMassage = document.getElementById('welcomeMassage');
+      const userProfilePic = document.getElementById('userProfilePic');
+
+      if(welcomeMassage) welcomeMassage.textContent = `Welcome back, ${user.name}!`;
+      if(userProfilePic) userProfilePic.src = user.profileImage;  
+
+      if(settingsView && typeof settingsView.loadProfile === 'function'){
+        settingsView.loadProfile(user);
+      }
+    }
+    
+    alert(`Welcome back, ${user.name || 'User'}!`);
+    
   }else{
     document.getElementById('loginPage').classList.remove('hidden');
     document.getElementById('mainApp').classList.add('hidden');
