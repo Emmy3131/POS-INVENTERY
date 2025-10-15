@@ -10,9 +10,33 @@ import MakeSale from "./Model/MakeSale.js";
 import * as transactionView from "./view/transactionView.js"
 import Transaction from "./Model/Transaction.js";
 import * as settingsView from "./view/settingsView.js";
+import * as authView from "./view/authView.js";
+import Authentication from "./Model/Auth.js";
 
 const state = {};
 
+elements.togglePassword.addEventListener('click', authView.togglePassword);
+
+elements.loginBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  const input = authView.getloginInput();
+  
+  if (input.email && input.password) {
+    if (!state.auth) state.auth = new Authentication();
+    
+    const isLoggedIn = state.auth.login(input.email, input.password);
+    if (isLoggedIn) {
+      
+      document.getElementById('loginPage').classList.add('hidden');
+      document.getElementById('mainApp').classList.remove('hidden');
+      authView.clearLoginInput();
+    } else {
+      alert("Invalid email or password");
+    }
+  } else {
+    alert("Please fill in all required fields.");
+  }
+});
 
 
 // Event listener for profile button

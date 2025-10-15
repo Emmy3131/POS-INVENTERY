@@ -682,7 +682,24 @@ var _transactionViewJs = require("./view/transactionView.js");
 var _transactionJs = require("./Model/Transaction.js");
 var _transactionJsDefault = parcelHelpers.interopDefault(_transactionJs);
 var _settingsViewJs = require("./view/settingsView.js");
+var _authViewJs = require("./view/authView.js");
+var _authJs = require("./Model/Auth.js");
+var _authJsDefault = parcelHelpers.interopDefault(_authJs);
 const state = {};
+(0, _baseJs.elements).togglePassword.addEventListener('click', _authViewJs.togglePassword);
+(0, _baseJs.elements).loginBtn.addEventListener('click', (e)=>{
+    e.preventDefault();
+    const input = _authViewJs.getloginInput();
+    if (input.email && input.password) {
+        if (!state.auth) state.auth = new (0, _authJsDefault.default)();
+        const isLoggedIn = state.auth.login(input.email, input.password);
+        if (isLoggedIn) {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            _authViewJs.clearLoginInput();
+        } else alert("Invalid email or password");
+    } else alert("Please fill in all required fields.");
+});
 // Event listener for profile button
 (0, _baseJs.elements).profileBtnicon.addEventListener("click", (0, _baseJs.toggleProfileMenu));
 // Optional: click outside to close
@@ -966,7 +983,7 @@ window.addEventListener('load', (e)=>{
 //load statistics
 });
 
-},{"./view/base.js":"4ZOTV","./view/userView.js":"4aMwY","./Model/User.js":"U3xmt","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./Model/Product.js":"2K9iZ","./view/productView":"3wN6N","./view/makeSaleView.js":"eZc3t","./Model/MakeSale.js":"l0sIG","./view/transactionView.js":"aBom8","./Model/Transaction.js":"4mtzz","./view/settingsView.js":"elyYT"}],"4ZOTV":[function(require,module,exports,__globalThis) {
+},{"./view/base.js":"4ZOTV","./view/userView.js":"4aMwY","./Model/User.js":"U3xmt","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./Model/Product.js":"2K9iZ","./view/productView":"3wN6N","./view/makeSaleView.js":"eZc3t","./Model/MakeSale.js":"l0sIG","./view/transactionView.js":"aBom8","./Model/Transaction.js":"4mtzz","./view/settingsView.js":"elyYT","./view/authView.js":"4YP1q","./Model/Auth.js":"97skh"}],"4ZOTV":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "elements", ()=>elements);
@@ -1025,7 +1042,11 @@ const elements = {
     profileBtn: document.getElementById("profileBtn"),
     passwordBtn: document.getElementById("passwordBtn"),
     profileSection: document.getElementById("profileSection"),
-    passwordSection: document.getElementById("passwordSection")
+    passwordSection: document.getElementById("passwordSection"),
+    loginEmail: document.getElementById('loginEmail'),
+    loginPassword: document.getElementById('loginPassword'),
+    togglePassword: document.getElementById('togglePassword'),
+    loginBtn: document.getElementById('loginBtn')
 };
 const toggleProfileMenu = ()=>{
     elements.dropdownMenu.classList.toggle("hidden");
@@ -1758,6 +1779,61 @@ const passwordSectionView = ()=>{
     (0, _baseJs.elements).profileBtn.classList.add("text-gray-700");
 };
 
-},{"./base.js":"4ZOTV","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["4CwNn","ebWYT"], "ebWYT", "parcelRequire94c2", {})
+},{"./base.js":"4ZOTV","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4YP1q":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "togglePassword", ()=>togglePassword);
+parcelHelpers.export(exports, "getloginInput", ()=>getloginInput);
+parcelHelpers.export(exports, "clearLoginInput", ()=>clearLoginInput);
+var _baseJs = require("./base.js");
+const togglePassword = ()=>{
+    const type = (0, _baseJs.elements).loginPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+    (0, _baseJs.elements).loginPassword.setAttribute('type', type);
+    (0, _baseJs.elements).togglePassword.innerHTML = type === "password" ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+};
+const getloginInput = ()=>{
+    (0, _baseJs.elements).loginEmail.value;
+    (0, _baseJs.elements).loginPassword.value;
+    return {
+        email: (0, _baseJs.elements).loginEmail.value,
+        password: (0, _baseJs.elements).loginPassword.value
+    };
+};
+const clearLoginInput = ()=>{
+    (0, _baseJs.elements).loginEmail.value = '';
+    (0, _baseJs.elements).loginPassword.value = '';
+};
+
+},{"./base.js":"4ZOTV","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"97skh":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+class Authentication {
+    constructor(){
+        this.users = JSON.parse(localStorage.getItem('users')) || [];
+    }
+    readusers() {
+        this.users = JSON.parse(localStorage.getItem('users')) || [];
+    }
+    login(email, password) {
+        this.readusers();
+        const user = this.users.find((user)=>user.email === email && user.password === password);
+        if (user) {
+            localStorage.setItem('loggedInUser', JSON.stringify(user));
+            return user;
+        } else return null;
+    }
+    logout() {
+        localStorage.removeItem('loggedInUser');
+    }
+    getLoggedInUser() {
+        return JSON.parse(localStorage.getItem('loggedInUser'));
+    }
+    isloggedIn() {
+        return localStorage.getItem('loggedInUser') !== null;
+    }
+}
+exports.default = Authentication;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["4CwNn","ebWYT"], "ebWYT", "parcelRequire94c2", {})
 
 //# sourceMappingURL=index.js.map

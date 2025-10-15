@@ -58,6 +58,12 @@ export const elements = {
   passwordBtn: document.getElementById("passwordBtn"),
   profileSection: document.getElementById("profileSection"),
   passwordSection: document.getElementById("passwordSection"),
+
+  loginEmail: document.getElementById('loginEmail'),
+  loginPassword: document.getElementById('loginPassword'),
+  togglePassword: document.getElementById('togglePassword'),
+  loginBtn: document.getElementById('loginBtn')
+
 }
 
 export const toggleProfileMenu = () => {
