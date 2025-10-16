@@ -12,6 +12,7 @@ import Transaction from "./Model/Transaction.js";
 import * as settingsView from "./view/settingsView.js";
 import * as authView from "./view/authView.js";
 import Authentication from "./Model/Auth.js";
+import Settings from "./Model/Setting.js";
 
 const state = {};
 
@@ -389,7 +390,35 @@ elements.profileBtn.addEventListener('click', ()=>{
 elements.passwordBtn.addEventListener('click', ()=>{
   settingsView.passwordSectionView()
 })
+elements.settingsSaveBtn.addEventListener("click", (e)=>{
+  e.preventDefault()
+  if(!state.settings) state.settings = new Settings;
+  const updates = settingsView.getProfileInput();
+  const updatedActiveUser = state.settings.updateUserProfile(updates);
+  if(updatedActiveUser){
+    alert('profile updsted successfully')
+    settingsView.displayUserProfile(updatedActiveUser)
+  }else{
+    alert('updates fails')
+  }
+})
 
+elements.settingsChangePasswordBtn.addEventListener('click', (e)=>{
+  e.preventDefault()
+  if (!state.settings) state.settings = new Settings();
+  const {oldPassword, newPassword} = settingsView.getPasswordInput();
+  const changed = state.settings.changePassword(oldPassword,newPassword)
+
+  if(changed){
+    alert('Password change successfully')
+  }else{
+    alert('invslid old password')
+  }
+})
+
+settingsView.updateProfilePicture((newImg) =>{
+  state.settings.changeProfilePicture(newImg)
+})
 
 
 //On page load
@@ -444,13 +473,16 @@ window.addEventListener('load', e=>{
     const { subTotal, tax, discount, orderTotal } = makeSale.calculateTotals();
     makeSaleView.orderSummaryTotals(subTotal, tax, discount, orderTotal);
 
-   
-
   //load transactions
   const transaction = new Transaction();
   transaction.read()
   const allTransactions = transaction.getAllTransactions();
   transactionView.transactionView.render(allTransactions);
+
+  // load profilesetings
+  const settngs = new Settings
+  const activeUser = settngs.getActiveUser();
+  if(activeUser) settingsView.displayUserProfile(activeUser)
 
   //load statistics
 })

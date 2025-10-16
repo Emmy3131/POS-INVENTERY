@@ -685,6 +685,8 @@ var _settingsViewJs = require("./view/settingsView.js");
 var _authViewJs = require("./view/authView.js");
 var _authJs = require("./Model/Auth.js");
 var _authJsDefault = parcelHelpers.interopDefault(_authJs);
+var _settingJs = require("./Model/Setting.js");
+var _settingJsDefault = parcelHelpers.interopDefault(_settingJs);
 const state = {};
 (0, _baseJs.elements).togglePassword.addEventListener('click', _authViewJs.togglePassword);
 (0, _baseJs.elements).loginBtn.addEventListener('click', (e)=>{
@@ -963,6 +965,27 @@ document.getElementById('transList').addEventListener('click', (e)=>{
 (0, _baseJs.elements).passwordBtn.addEventListener('click', ()=>{
     _settingsViewJs.passwordSectionView();
 });
+(0, _baseJs.elements).settingsSaveBtn.addEventListener("click", (e)=>{
+    e.preventDefault();
+    if (!state.settings) state.settings = new (0, _settingJsDefault.default);
+    const updates = _settingsViewJs.getProfileInput();
+    const updatedActiveUser = state.settings.updateUserProfile(updates);
+    if (updatedActiveUser) {
+        alert('profile updsted successfully');
+        _settingsViewJs.displayUserProfile(updatedActiveUser);
+    } else alert('updates fails');
+});
+(0, _baseJs.elements).settingsChangePasswordBtn.addEventListener('click', (e)=>{
+    e.preventDefault();
+    if (!state.settings) state.settings = new (0, _settingJsDefault.default)();
+    const { oldPassword, newPassword } = _settingsViewJs.getPasswordInput();
+    const changed = state.settings.changePassword(oldPassword, newPassword);
+    if (changed) alert('Password change successfully');
+    else alert('invslid old password');
+});
+_settingsViewJs.updateProfilePicture((newImg)=>{
+    state.settings.changeProfilePicture(newImg);
+});
 //On page load
 window.addEventListener('load', (e)=>{
     if (!state.auth) state.auth = new (0, _authJsDefault.default)();
@@ -1007,10 +1030,14 @@ window.addEventListener('load', (e)=>{
     transaction.read();
     const allTransactions = transaction.getAllTransactions();
     _transactionViewJs.transactionView.render(allTransactions);
+    // load profilesetings
+    const settngs = new (0, _settingJsDefault.default);
+    const activeUser = settngs.getActiveUser();
+    if (activeUser) _settingsViewJs.displayUserProfile(activeUser);
 //load statistics
 });
 
-},{"./view/base.js":"4ZOTV","./view/userView.js":"4aMwY","./Model/User.js":"U3xmt","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./Model/Product.js":"2K9iZ","./view/productView":"3wN6N","./view/makeSaleView.js":"eZc3t","./Model/MakeSale.js":"l0sIG","./view/transactionView.js":"aBom8","./Model/Transaction.js":"4mtzz","./view/settingsView.js":"elyYT","./view/authView.js":"4YP1q","./Model/Auth.js":"97skh"}],"4ZOTV":[function(require,module,exports,__globalThis) {
+},{"./view/base.js":"4ZOTV","./view/userView.js":"4aMwY","./Model/User.js":"U3xmt","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./Model/Product.js":"2K9iZ","./view/productView":"3wN6N","./view/makeSaleView.js":"eZc3t","./Model/MakeSale.js":"l0sIG","./view/transactionView.js":"aBom8","./Model/Transaction.js":"4mtzz","./view/settingsView.js":"elyYT","./view/authView.js":"4YP1q","./Model/Auth.js":"97skh","./Model/Setting.js":"5RctD"}],"4ZOTV":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "elements", ()=>elements);
@@ -1070,6 +1097,15 @@ const elements = {
     passwordBtn: document.getElementById("passwordBtn"),
     profileSection: document.getElementById("profileSection"),
     passwordSection: document.getElementById("passwordSection"),
+    settingsProfileName: document.getElementById("settingsProfileName"),
+    settingsProfilePhone: document.getElementById("settingsProfilephone"),
+    settingsProfileEmail: document.getElementById("settingsProfileEmail"),
+    settingsProfilePicture: document.getElementById('settingsProfilePicture'),
+    settingsProfileImageInput: document.getElementById('settingsProfileImageInput'),
+    settingsSaveBtn: document.getElementById('settingsSaveBtn'),
+    oldPassword: document.getElementById('oldPassword'),
+    newPassword: document.getElementById("newPassword"),
+    settingsChangePasswordBtn: document.getElementById('settingsChangePassword'),
     loginEmail: document.getElementById('loginEmail'),
     loginPassword: document.getElementById('loginPassword'),
     togglePassword: document.getElementById('togglePassword'),
@@ -1793,6 +1829,10 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "profileSectionView", ()=>profileSectionView);
 parcelHelpers.export(exports, "passwordSectionView", ()=>passwordSectionView);
+parcelHelpers.export(exports, "displayUserProfile", ()=>displayUserProfile);
+parcelHelpers.export(exports, "getProfileInput", ()=>getProfileInput);
+parcelHelpers.export(exports, "getPasswordInput", ()=>getPasswordInput);
+parcelHelpers.export(exports, "updateProfilePicture", ()=>updateProfilePicture);
 var _baseJs = require("./base.js");
 const profileSectionView = ()=>{
     (0, _baseJs.elements).profileSection.classList.remove("hidden");
@@ -1807,6 +1847,40 @@ const passwordSectionView = ()=>{
     (0, _baseJs.elements).passwordBtn.classList.add("bg-green-900", "text-white");
     (0, _baseJs.elements).profileBtn.classList.remove("bg-green-900", "text-white");
     (0, _baseJs.elements).profileBtn.classList.add("text-gray-700");
+};
+const displayUserProfile = (user)=>{
+    if (!user) return;
+    // fill the profile filds
+    if ((0, _baseJs.elements).settingsProfileName) (0, _baseJs.elements).settingsProfileName.value = user.name || '';
+    if ((0, _baseJs.elements).settingsProfilePhone) (0, _baseJs.elements).settingsProfilePhone.value = user.phone || '';
+    if ((0, _baseJs.elements).settingsProfileEmail) (0, _baseJs.elements).settingsProfileEmail.value = user.email || '';
+    if ((0, _baseJs.elements).settingsProfilePicture) (0, _baseJs.elements).settingsProfilePicture.src = user.profilePicture || './userImage/default.jpg';
+};
+const getProfileInput = ()=>{
+    return {
+        name: (0, _baseJs.elements).settingsProfileName.value,
+        phone: (0, _baseJs.elements).settingsProfilePhone.value,
+        email: (0, _baseJs.elements).settingsProfileEmail.value
+    };
+};
+const getPasswordInput = ()=>{
+    return {
+        oldPassword: (0, _baseJs.elements).oldPassword.value,
+        newPassword: (0, _baseJs.elements).newPassword.value
+    };
+};
+const updateProfilePicture = (callback)=>{
+    (0, _baseJs.elements).settingsProfileImageInput.addEventListener('change', (e)=>{
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            const base64 = ev.target.result;
+            (0, _baseJs.elements).settingsProfilePicture.src = base64;
+            callback(base64);
+        };
+        reader.readAsDataURL(file);
+    });
 };
 
 },{"./base.js":"4ZOTV","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4YP1q":[function(require,module,exports,__globalThis) {
@@ -1864,6 +1938,52 @@ class Authentication {
 }
 exports.default = Authentication;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["4CwNn","ebWYT"], "ebWYT", "parcelRequire94c2", {})
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5RctD":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _user = require("./User");
+var _userDefault = parcelHelpers.interopDefault(_user);
+var _auth = require("./Auth");
+var _authDefault = parcelHelpers.interopDefault(_auth);
+class Settings {
+    constructor(){
+        this.userModel = new (0, _userDefault.default)();
+        this.auth = new (0, _authDefault.default)();
+    }
+    getActiveUser() {
+        const activeUser = this.auth.getLoggedInUser();
+        return activeUser || null;
+    }
+    updateUserProfile(updates) {
+        this.userModel.readUsers();
+        const currentUser = this.auth.getLoggedInUser();
+        if (!currentUser) return false;
+        const index = this.userModel.users.findIndex((u)=>u.id === currentUser.id);
+        if (index === -1) return false;
+        // update only provide field
+        this.userModel.users[index] = {
+            ...this.userModel.users[index],
+            ...updates
+        };
+        this.userModel.persistUser();
+        localStorage.setItem('loggedInUser', JSON.stringify(this.userModel.users[index]));
+        return this.userModel.users[index];
+    }
+    changePassword(oldPassword, newPassword) {
+        const currentUser = this.auth.getLoggedInUser();
+        if (!currentUser || currentUser.password !== oldPassword) return false;
+        return this.updateUserProfile({
+            password: newPassword
+        });
+    }
+    changeProfilePicture(base64image) {
+        return this.updateUserProfile({
+            profilePicture: base64image
+        });
+    }
+}
+exports.default = Settings;
+
+},{"./User":"U3xmt","./Auth":"97skh","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["4CwNn","ebWYT"], "ebWYT", "parcelRequire94c2", {})
 
 //# sourceMappingURL=index.js.map

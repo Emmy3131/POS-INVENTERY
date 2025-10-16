@@ -58,6 +58,16 @@ export const elements = {
   passwordBtn: document.getElementById("passwordBtn"),
   profileSection: document.getElementById("profileSection"),
   passwordSection: document.getElementById("passwordSection"),
+  settingsProfileName: document.getElementById("settingsProfileName"),
+  settingsProfilePhone: document.getElementById("settingsProfilephone"),
+  settingsProfileEmail: document.getElementById("settingsProfileEmail"),
+  settingsProfilePicture: document.getElementById('settingsProfilePicture'),
+  settingsProfileImageInput: document.getElementById('settingsProfileImageInput'),
+  settingsSaveBtn: document.getElementById('settingsSaveBtn'),
+  oldPassword: document.getElementById('oldPassword'),
+  newPassword: document.getElementById("newPassword"),
+  settingsChangePasswordBtn: document.getElementById('settingsChangePassword'),
+  
 
   loginEmail: document.getElementById('loginEmail'),
   loginPassword: document.getElementById('loginPassword'),
