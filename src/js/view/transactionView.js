@@ -11,7 +11,7 @@ export const itemDetailsMOdel=()=>{
 
 export const transactionDetailsView = (items) => {
   const container = elements.transItems;
-  container.innerHTML = ""; // ✅ Clear old items before rendering new ones
+  container.innerHTML = "";
 
   if (!items || items.length === 0) {
     container.insertAdjacentHTML(
@@ -33,8 +33,7 @@ export const transactionDetailsView = (items) => {
           <h3 class="truncate w-32 font-semibold text-gray-800">${item.productName || 'Unnamed Product'}</h3>
           <p class="text-gray-600 text-sm">Qty: ${item.quantity || 1}</p>
           <p class="text-gray-800 font-medium mt-1">₦${item.price || 0}</p>
-        </div>
-      </div>
+        </div>     
     `;
 
     container.insertAdjacentHTML("beforeend", itemMarkup);

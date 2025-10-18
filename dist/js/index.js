@@ -682,33 +682,20 @@ var _transactionViewJs = require("./view/transactionView.js");
 var _transactionJs = require("./Model/Transaction.js");
 var _transactionJsDefault = parcelHelpers.interopDefault(_transactionJs);
 var _settingsViewJs = require("./view/settingsView.js");
-var _authViewJs = require("./view/authView.js");
 var _authJs = require("./Model/Auth.js");
 var _authJsDefault = parcelHelpers.interopDefault(_authJs);
 var _settingJs = require("./Model/Setting.js");
 var _settingJsDefault = parcelHelpers.interopDefault(_settingJs);
 const state = {};
-(0, _baseJs.elements).togglePassword.addEventListener('click', _authViewJs.togglePassword);
-(0, _baseJs.elements).loginBtn.addEventListener('click', (e)=>{
-    e.preventDefault();
-    const input = _authViewJs.getloginInput();
-    if (input.email && input.password) {
-        if (!state.auth) state.auth = new (0, _authJsDefault.default)();
-        const isLoggedIn = state.auth.login(input.email, input.password);
-        if (isLoggedIn) {
-            document.getElementById('loginPage').classList.add('hidden');
-            document.getElementById('mainApp').classList.remove('hidden');
-            _authViewJs.clearLoginInput();
-        } else alert("Invalid email or password");
-    } else alert("Please fill in all required fields.");
+document.addEventListener("DOMContentLoaded", ()=>{
+    _makeSaleViewJs.getTotalCart();
 });
 (0, _baseJs.elements).loggedOut.addEventListener('click', ()=>{
     if (!state.auth) state.auth = new (0, _authJsDefault.default)();
     const confirmLogout = confirm("Are you sure you want to log out?");
     if (confirmLogout) {
         state.auth.logout();
-        document.getElementById('loginPage').classList.remove('hidden');
-        document.getElementById('mainApp').classList.add('hidden');
+        location.assign('login.html');
     } else alert("Logout cancelled.");
 });
 // Event listener for profile button
@@ -822,7 +809,7 @@ document.getElementById("ProductList").addEventListener("click", (e)=>{
 // Make sale control
 document.addEventListener('click', _makeSaleViewJs.initCartPage());
 document.getElementById("saletList").addEventListener("click", (e)=>{
-    //Handle add to cart
+    // Handle add to cart
     if (e.target.closest('.add-to-cart')) {
         const id = e.target.parentNode.parentNode.parentNode.parentNode.id;
         if (!state.MakeSale) state.MakeSale = new (0, _makeSaleJsDefault.default)();
@@ -839,13 +826,18 @@ document.getElementById("saletList").addEventListener("click", (e)=>{
             _makeSaleViewJs.updateCartQuantity(updateQuantity.id, updateQuantity.quantity);
             const { subTotal, tax, discount, orderTotal } = state.MakeSale.calculateTotals();
             _makeSaleViewJs.orderSummaryTotals(subTotal, tax, discount, orderTotal);
+            // ✅ Update cart badge count
+            _makeSaleViewJs.getTotalCart();
             alert("Product quantity increased in cart");
             return;
         }
+        // Add new item
         const item = state.MakeSale.addToCart(product.name, product.price, 1, product.productImage, product.id);
         _makeSaleViewJs.renderCartItem(item);
         const { subTotal, tax, discount, orderTotal } = state.MakeSale.calculateTotals();
         _makeSaleViewJs.orderSummaryTotals(subTotal, tax, discount, orderTotal);
+        // ✅ Update cart badge count here too
+        _makeSaleViewJs.getTotalCart();
         alert("Product added to cart successfully");
     }
 });
@@ -908,6 +900,7 @@ document.getElementById("cartList").addEventListener("click", (e)=>{
         return;
     }
     (0, _baseJs.elements).totalAmountInput.value = totals.orderTotal.toFixed(2);
+    (0, _baseJs.elements).orderSummary.classList.remove('hidden');
     _transactionViewJs.paymentModel();
 });
 (0, _baseJs.elements).paymentCanBtn.addEventListener('click', ()=>{
@@ -991,8 +984,6 @@ window.addEventListener('load', (e)=>{
     if (!state.auth) state.auth = new (0, _authJsDefault.default)();
     const isLoggedIn = state.auth.isLoggedIn();
     if (isLoggedIn) {
-        document.getElementById('loginPage').classList.add('hidden');
-        document.getElementById('mainApp').classList.remove('hidden');
         const user = state.auth.getLoggedInUser();
         if (user) {
             const welcomeMassage = document.getElementById('welcomeMassage');
@@ -1002,10 +993,7 @@ window.addEventListener('load', (e)=>{
             if (_settingsViewJs && typeof _settingsViewJs.loadProfile === 'function') _settingsViewJs.loadProfile(user);
         }
         alert(`Welcome back, ${user.name || 'User'}!`);
-    } else {
-        document.getElementById('loginPage').classList.remove('hidden');
-        document.getElementById('mainApp').classList.add('hidden');
-    }
+    } else window.location.assign('login.html');
     //Load users
     const user = new (0, _userJsDefault.default)();
     user.readUsers();
@@ -1034,16 +1022,125 @@ window.addEventListener('load', (e)=>{
     const settngs = new (0, _settingJsDefault.default);
     const activeUser = settngs.getActiveUser();
     if (activeUser) _settingsViewJs.displayUserProfile(activeUser);
+// makeSaleView.getTotalCart('cart');
 //load statistics
 });
+const saleCtx = document.getElementById('salesChart').getContext('2d');
+//  const availableProducts = [2000, 5000, 1000]
+const availableProducts = [
+    2000,
+    5000,
+    1000,
+    1500,
+    2500,
+    1700,
+    40000,
+    9500,
+    10500,
+    6000,
+    3500,
+    2100
+];
+const salesData = [
+    3000,
+    8000,
+    1100,
+    1800,
+    2300,
+    1500,
+    30000,
+    9000,
+    11500,
+    4500,
+    2500,
+    2100
+];
+const salesChart = new Chart(saleCtx, {
+    type: 'line',
+    data: {
+        labels: [
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'May',
+            'Jun',
+            'Jul',
+            'Aug',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dec'
+        ],
+        datasets: [
+            {
+                label: 'Available Products',
+                data: availableProducts,
+                backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                borderColor: '#3498db',
+                borderWith: 2,
+                fill: true,
+                tension: 0.3
+            },
+            {
+                label: 'Sales',
+                data: salesData,
+                backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                borderColor: '#2ecc71',
+                borderWith: 2,
+                fill: true,
+                tension: 0.3
+            }
+        ]
+    }
+});
+const inventeryChart = document.getElementById('inventoryChart').getContext('2d');
+const invenCrt = new Chart(inventeryChart, {
+    type: 'doughnut',
+    data: {
+        labels: [
+            'Low Stocks',
+            'Out Of Stock'
+        ],
+        datasets: [
+            {
+                data: [
+                    2532,
+                    121
+                ],
+                backgroundColor: [
+                    '#f39c12',
+                    '#e74c3c'
+                ],
+                borderWith: 0,
+                cutout: '70%'
+            }
+        ],
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.label}: ${context.parsed.toLocaleString()};`;
+                        }
+                    }
+                }
+            }
+        }
+    }
+});
 
-},{"./view/base.js":"4ZOTV","./view/userView.js":"4aMwY","./Model/User.js":"U3xmt","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./Model/Product.js":"2K9iZ","./view/productView":"3wN6N","./view/makeSaleView.js":"eZc3t","./Model/MakeSale.js":"l0sIG","./view/transactionView.js":"aBom8","./Model/Transaction.js":"4mtzz","./view/settingsView.js":"elyYT","./view/authView.js":"4YP1q","./Model/Auth.js":"97skh","./Model/Setting.js":"5RctD"}],"4ZOTV":[function(require,module,exports,__globalThis) {
+},{"./view/base.js":"4ZOTV","./view/userView.js":"4aMwY","./Model/User.js":"U3xmt","./view/productView":"3wN6N","./Model/Product.js":"2K9iZ","./view/makeSaleView.js":"eZc3t","./Model/MakeSale.js":"l0sIG","./view/transactionView.js":"aBom8","./Model/Transaction.js":"4mtzz","./view/settingsView.js":"elyYT","./Model/Auth.js":"97skh","./Model/Setting.js":"5RctD","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4ZOTV":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "elements", ()=>elements);
 parcelHelpers.export(exports, "toggleProfileMenu", ()=>toggleProfileMenu);
 parcelHelpers.export(exports, "sidebarLinks", ()=>sidebarLinks);
-parcelHelpers.export(exports, "makeSaleCart", ()=>makeSaleCart);
 const elements = {
     saleChart: document.getElementById("salesChart"),
     profileBtnicon: document.getElementById("profile-btn"),
@@ -1053,6 +1150,7 @@ const elements = {
     addUserCard: document.getElementById("userCard"),
     userCardCancelBtn: document.getElementById("addUserCardCancelBtn"),
     dashboardPage: document.getElementById("userList-1"),
+    cartNumbering: document.getElementById('cart-numbering'),
     userInputName: document.getElementById("userInputName"),
     userInputnum: document.getElementById("userInputnum"),
     userInputPassword: document.getElementById('userInputPassword'),
@@ -1106,6 +1204,11 @@ const elements = {
     oldPassword: document.getElementById('oldPassword'),
     newPassword: document.getElementById("newPassword"),
     settingsChangePasswordBtn: document.getElementById('settingsChangePassword'),
+    profileLink: document.getElementById('profileLink'),
+    profileName: document.getElementById('profileName'),
+    profilePhone: document.getElementById('profilePhone'),
+    profileEmail: document.getElementById('profileEmail'),
+    userName: document.getElementById('userName'),
     loginEmail: document.getElementById('loginEmail'),
     loginPassword: document.getElementById('loginPassword'),
     togglePassword: document.getElementById('togglePassword'),
@@ -1142,7 +1245,6 @@ const sidebarLinks = ()=>{
         });
     });
 };
-const makeSaleCart = ()=>{};
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports,__globalThis) {
 exports.interopDefault = function(a) {
@@ -1271,7 +1373,7 @@ const updateUserStatusView = (user)=>{
     });
 };
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./base.js":"4ZOTV"}],"U3xmt":[function(require,module,exports,__globalThis) {
+},{"./base.js":"4ZOTV","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"U3xmt":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 class User {
@@ -1320,64 +1422,6 @@ class User {
     }
 }
 exports.default = User;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"2K9iZ":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-class Product {
-    constructor(){
-        this.products = [];
-    }
-    addProduct(name, price, discription, quantity, category, productImage) {
-        this.readProduct();
-        const id = Date.now();
-        const newProduct = {
-            name,
-            price,
-            discription,
-            quantity,
-            category,
-            productImage,
-            id
-        };
-        this.products.push(newProduct);
-        this.persistProduct();
-        return newProduct;
-    }
-    getProducts() {
-        this.readProduct();
-        return this.products;
-    }
-    getProduct(id) {
-        this.readProduct();
-        const product = this.products.find((product)=>product.id === parseInt(id));
-        return product;
-    }
-    deleteProduct(id) {
-        this.readProduct();
-        this.products = this.products.filter((product)=>product.id !== parseInt(id));
-        this.persistProduct();
-    }
-    editProduct(id, updatedData) {
-        this.readProduct;
-        const productIndex = this.products.findIndex((product)=>product.id === parseInt(id));
-        if (productIndex !== -1) {
-            this.products[productIndex] = {
-                ...this.products[productIndex],
-                ...updatedData
-            };
-            this.persistProduct();
-        }
-    }
-    persistProduct() {
-        localStorage.setItem("products", JSON.stringify(this.products));
-    }
-    readProduct() {
-        const products = JSON.parse(localStorage.getItem("products"));
-        if (products) this.products = products;
-    }
-}
-exports.default = Product;
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3wN6N":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -1504,7 +1548,65 @@ const editProduct = (product)=>{
     productImage = product.productImage;
 };
 
-},{"../view/base.js":"4ZOTV","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"eZc3t":[function(require,module,exports,__globalThis) {
+},{"../view/base.js":"4ZOTV","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"2K9iZ":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+class Product {
+    constructor(){
+        this.products = [];
+    }
+    addProduct(name, price, discription, quantity, category, productImage) {
+        this.readProduct();
+        const id = Date.now();
+        const newProduct = {
+            name,
+            price,
+            discription,
+            quantity,
+            category,
+            productImage,
+            id
+        };
+        this.products.push(newProduct);
+        this.persistProduct();
+        return newProduct;
+    }
+    getProducts() {
+        this.readProduct();
+        return this.products;
+    }
+    getProduct(id) {
+        this.readProduct();
+        const product = this.products.find((product)=>product.id === parseInt(id));
+        return product;
+    }
+    deleteProduct(id) {
+        this.readProduct();
+        this.products = this.products.filter((product)=>product.id !== parseInt(id));
+        this.persistProduct();
+    }
+    editProduct(id, updatedData) {
+        this.readProduct;
+        const productIndex = this.products.findIndex((product)=>product.id === parseInt(id));
+        if (productIndex !== -1) {
+            this.products[productIndex] = {
+                ...this.products[productIndex],
+                ...updatedData
+            };
+            this.persistProduct();
+        }
+    }
+    persistProduct() {
+        localStorage.setItem("products", JSON.stringify(this.products));
+    }
+    readProduct() {
+        const products = JSON.parse(localStorage.getItem("products"));
+        if (products) this.products = products;
+    }
+}
+exports.default = Product;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"eZc3t":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "initCartPage", ()=>initCartPage);
@@ -1514,6 +1616,8 @@ parcelHelpers.export(exports, "clearCartItems", ()=>clearCartItems);
 parcelHelpers.export(exports, "updateCartQuantity", ()=>updateCartQuantity);
 parcelHelpers.export(exports, "orderSummaryTotals", ()=>orderSummaryTotals);
 parcelHelpers.export(exports, "clearOrderSummary", ()=>clearOrderSummary);
+parcelHelpers.export(exports, "getTotalCart", ()=>getTotalCart);
+parcelHelpers.export(exports, "refreshCartCount", ()=>refreshCartCount);
 var _baseJs = require("./base.js");
 const initCartPage = ()=>{
     (0, _baseJs.elements).myCartList.addEventListener("click", ()=>{
@@ -1597,6 +1701,7 @@ const deleteCartItem = (id)=>{
      * Modified renderCartItem to use unique IDs by prefixing with 'cart-item-'
      * This ensures cart items and product items don't have ID conflicts.
      */ el.parentElement.removeChild(el);
+        refreshCartCount();
     }
 };
 const clearCartItems = ()=>{
@@ -1605,6 +1710,7 @@ const clearCartItems = ()=>{
     (0, _baseJs.elements).orderSummary.classList.add('hidden');
     (0, _baseJs.elements).checkOutBtn.classList.add('hidden');
     document.getElementById('cartList').innerHTML = `<p class="text-gray-500 text-center py-4">Your cart is empty.</p>`;
+    refreshCartCount();
 };
 const updateCartQuantity = (id, newQuantity)=>{
     const cartItem = document.getElementById(`cart-item-${id}`);
@@ -1620,6 +1726,7 @@ const updateCartQuantity = (id, newQuantity)=>{
         return;
     }
     quantityElement.textContent = `Quantity: ${newQuantity}`;
+    refreshCartCount();
 };
 const orderSummaryTotals = (subTotal, tax, discount, orderTotal)=>{
     (0, _baseJs.elements).subTotal.textContent = `\u{20A6}${parseInt(subTotal).toLocaleString()}`;
@@ -1632,6 +1739,15 @@ const clearOrderSummary = ()=>{
     (0, _baseJs.elements).tax.textContent = `\u{20A6}0`;
     (0, _baseJs.elements).discount.textContent = `\u{20A6}0`;
     (0, _baseJs.elements).orderTotal.textContent = `\u{20A6}0`;
+};
+const getTotalCart = ()=>{
+    const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+    const totalCarts = cartItems.reduce((sum, item)=>sum + (item.quantity || 1), 0);
+    if ((0, _baseJs.elements).cartNumbering) (0, _baseJs.elements).cartNumbering.innerHTML = totalCarts;
+    return totalCarts;
+};
+const refreshCartCount = ()=>{
+    getTotalCart();
 };
 
 },{"./base.js":"4ZOTV","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"l0sIG":[function(require,module,exports,__globalThis) {
@@ -1733,7 +1849,7 @@ const itemDetailsMOdel = ()=>{
 };
 const transactionDetailsView = (items)=>{
     const container = (0, _baseJs.elements).transItems;
-    container.innerHTML = ""; // ✅ Clear old items before rendering new ones
+    container.innerHTML = "";
     if (!items || items.length === 0) {
         container.insertAdjacentHTML("beforeend", `<p class="text-center text-gray-500 py-4">No items found</p>`);
         return;
@@ -1750,8 +1866,7 @@ const transactionDetailsView = (items)=>{
           <h3 class="truncate w-32 font-semibold text-gray-800">${item.productName || 'Unnamed Product'}</h3>
           <p class="text-gray-600 text-sm">Qty: ${item.quantity || 1}</p>
           <p class="text-gray-800 font-medium mt-1">\u{20A6}${item.price || 0}</p>
-        </div>
-      </div>
+        </div>     
     `;
         container.insertAdjacentHTML("beforeend", itemMarkup);
     });
@@ -1837,15 +1952,15 @@ var _baseJs = require("./base.js");
 const profileSectionView = ()=>{
     (0, _baseJs.elements).profileSection.classList.remove("hidden");
     (0, _baseJs.elements).passwordSection.classList.add("hidden");
-    (0, _baseJs.elements).profileBtn.classList.add("bg-green-900", "text-white");
-    (0, _baseJs.elements).passwordBtn.classList.remove("bg-green-900", "text-white");
+    (0, _baseJs.elements).profileBtn.classList.add("bg-green-900", "text-white", "active");
+    (0, _baseJs.elements).passwordBtn.classList.remove("bg-green-900", "text-white", "active");
     (0, _baseJs.elements).passwordBtn.classList.add("text-gray-700");
 };
 const passwordSectionView = ()=>{
     (0, _baseJs.elements).passwordSection.classList.remove("hidden");
     (0, _baseJs.elements).profileSection.classList.add("hidden");
-    (0, _baseJs.elements).passwordBtn.classList.add("bg-green-900", "text-white");
-    (0, _baseJs.elements).profileBtn.classList.remove("bg-green-900", "text-white");
+    (0, _baseJs.elements).passwordBtn.classList.add("bg-green-900", "text-white", "active");
+    (0, _baseJs.elements).profileBtn.classList.remove("bg-green-900", "text-white", "active");
     (0, _baseJs.elements).profileBtn.classList.add("text-gray-700");
 };
 const displayUserProfile = (user)=>{
@@ -1854,15 +1969,29 @@ const displayUserProfile = (user)=>{
     if ((0, _baseJs.elements).settingsProfileName) (0, _baseJs.elements).settingsProfileName.value = user.name || '';
     if ((0, _baseJs.elements).settingsProfilePhone) (0, _baseJs.elements).settingsProfilePhone.value = user.phone || '';
     if ((0, _baseJs.elements).settingsProfileEmail) (0, _baseJs.elements).settingsProfileEmail.value = user.email || '';
-    if ((0, _baseJs.elements).settingsProfilePicture) (0, _baseJs.elements).settingsProfilePicture.src = user.profilePicture || './userImage/default.jpg';
+    if ((0, _baseJs.elements).profileName) (0, _baseJs.elements).profileName.innerHTML = user.name || '';
+    if ((0, _baseJs.elements).profilePhone) (0, _baseJs.elements).profilePhone.innerHTML = user.phone || '';
+    if ((0, _baseJs.elements).profileEmail) (0, _baseJs.elements).profileEmail.innerHTML = user.email || '';
+    if ((0, _baseJs.elements).userName) (0, _baseJs.elements).userName.innerHTML = user.name.trim() || '';
+    if ((0, _baseJs.elements).settingsProfilePicture) (0, _baseJs.elements).settingsProfilePicture.src = user.profileImage || './userImage/default.jpg';
 };
+let profileImage;
 const getProfileInput = ()=>{
     return {
         name: (0, _baseJs.elements).settingsProfileName.value,
         phone: (0, _baseJs.elements).settingsProfilePhone.value,
-        email: (0, _baseJs.elements).settingsProfileEmail.value
+        email: (0, _baseJs.elements).settingsProfileEmail.value,
+        profileImage: profileImage ? profileImage : (0, _baseJs.elements).settingsProfilePicture.src
     };
 };
+(0, _baseJs.elements).settingsProfileImageInput.addEventListener('change', (e)=>{
+    const file = (0, _baseJs.elements).settingsProfileImageInput.files[0];
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        profileImage = e.target.result;
+    };
+    reader.readAsDataURL(file);
+});
 const getPasswordInput = ()=>{
     return {
         oldPassword: (0, _baseJs.elements).oldPassword.value,
@@ -1881,31 +2010,6 @@ const updateProfilePicture = (callback)=>{
         };
         reader.readAsDataURL(file);
     });
-};
-
-},{"./base.js":"4ZOTV","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4YP1q":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "togglePassword", ()=>togglePassword);
-parcelHelpers.export(exports, "getloginInput", ()=>getloginInput);
-parcelHelpers.export(exports, "clearLoginInput", ()=>clearLoginInput);
-var _baseJs = require("./base.js");
-const togglePassword = ()=>{
-    const type = (0, _baseJs.elements).loginPassword.getAttribute('type') === 'password' ? 'text' : 'password';
-    (0, _baseJs.elements).loginPassword.setAttribute('type', type);
-    (0, _baseJs.elements).togglePassword.innerHTML = type === "password" ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
-};
-const getloginInput = ()=>{
-    (0, _baseJs.elements).loginEmail.value;
-    (0, _baseJs.elements).loginPassword.value;
-    return {
-        email: (0, _baseJs.elements).loginEmail.value,
-        password: (0, _baseJs.elements).loginPassword.value
-    };
-};
-const clearLoginInput = ()=>{
-    (0, _baseJs.elements).loginEmail.value = '';
-    (0, _baseJs.elements).loginPassword.value = '';
 };
 
 },{"./base.js":"4ZOTV","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"97skh":[function(require,module,exports,__globalThis) {

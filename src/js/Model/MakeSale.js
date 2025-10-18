@@ -6,8 +6,6 @@ export default class MakeSale {
   }
   addToCart(name, price, quantity, productImage, productId){
     const id = Date.now(); // Unique ID for the cart item
-    
-
     this.readCart()
     const existingItem = this.cart.find(i => i.productId === productId);;
     if(existingItem){

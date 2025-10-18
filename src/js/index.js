@@ -10,55 +10,32 @@ import MakeSale from "./Model/MakeSale.js";
 import * as transactionView from "./view/transactionView.js"
 import Transaction from "./Model/Transaction.js";
 import * as settingsView from "./view/settingsView.js";
-import * as authView from "./view/authView.js";
 import Authentication from "./Model/Auth.js";
 import Settings from "./Model/Setting.js";
 
 const state = {};
 
-elements.togglePassword.addEventListener('click', authView.togglePassword);
-
-elements.loginBtn.addEventListener('click', (e) => {
-  e.preventDefault();
-  const input = authView.getloginInput();
-  
-  if (input.email && input.password) {
-    if (!state.auth) state.auth = new Authentication();
-    
-    const isLoggedIn = state.auth.login(input.email, input.password);
-    if (isLoggedIn) {
-      
-      document.getElementById('loginPage').classList.add('hidden');
-      document.getElementById('mainApp').classList.remove('hidden');
-      authView.clearLoginInput();
-    } else {
-      alert("Invalid email or password");
-    }
-  } else {
-    alert("Please fill in all required fields.");
-  }
+document.addEventListener("DOMContentLoaded", () => {
+  makeSaleView.getTotalCart()
 });
+
 
 elements.loggedOut.addEventListener('click', () => {
   if (!state.auth) state.auth = new Authentication();
-
- 
   const confirmLogout = confirm("Are you sure you want to log out?");
   
   if (confirmLogout) {
     state.auth.logout();
-    document.getElementById('loginPage').classList.remove('hidden');
-    document.getElementById('mainApp').classList.add('hidden');
+    location.assign('login.html')
   } else {
   
     alert("Logout cancelled.");
   }
 });
 
-
-
 // Event listener for profile button
 elements.profileBtnicon.addEventListener("click", toggleProfileMenu);
+
 // Optional: click outside to close
 document.addEventListener("click", (e) => {
   if (!elements.profileBtnicon.contains(e.target) && !elements.dropdownMenu.contains(e.target)) {
@@ -203,23 +180,30 @@ elements.editProductBtn.addEventListener("click", (e)=>{
 // Make sale control
 document.addEventListener('click', makeSaleView.initCartPage());
 
-document.getElementById("saletList").addEventListener("click", (e)=>{ 
-  //Handle add to cart
-  if(e.target.closest('.add-to-cart')){
+document.getElementById("saletList").addEventListener("click", (e) => { 
+  // Handle add to cart
+  if (e.target.closest('.add-to-cart')) {
     const id = e.target.parentNode.parentNode.parentNode.parentNode.id;
-    if(!state.MakeSale) state.MakeSale = new MakeSale()
-    if(!state.product) state.product = new Product()
+    
+    if (!state.MakeSale) state.MakeSale = new MakeSale();
+    if (!state.product) state.product = new Product();
 
-    state.product.readProduct()
+    state.product.readProduct();
     const product = state.product.getProduct(id);
-    if(!product) return alert("Product not found")
+    if (!product) return alert("Product not found");
       
-    state.MakeSale.readCart()    
+    state.MakeSale.readCart();    
     const alreadyInCart = state.MakeSale.cart.find(item => item.productId === product.id); 
   
     if (alreadyInCart) {
       // Just increase quantity
-      const updateQuantity = state.MakeSale.addToCart(product.name, product.price, 1, product.productImage, product.id);
+      const updateQuantity = state.MakeSale.addToCart(
+        product.name,
+        product.price,
+        1,
+        product.productImage,
+        product.id
+      );
 
       // Update cart UI
       makeSaleView.updateCartQuantity(updateQuantity.id, updateQuantity.quantity);
@@ -227,19 +211,34 @@ document.getElementById("saletList").addEventListener("click", (e)=>{
       const { subTotal, tax, discount, orderTotal } = state.MakeSale.calculateTotals();
       makeSaleView.orderSummaryTotals(subTotal, tax, discount, orderTotal);
 
+      // ✅ Update cart badge count
+      makeSaleView.getTotalCart();
+
       alert("Product quantity increased in cart");
       return;
     }  
     
-    const item = state.MakeSale.addToCart(product.name, product.price, 1, product.productImage, product.id);
+    // Add new item
+    const item = state.MakeSale.addToCart(
+      product.name,
+      product.price,
+      1,
+      product.productImage,
+      product.id
+    );
     makeSaleView.renderCartItem(item);
 
     const { subTotal, tax, discount, orderTotal } = state.MakeSale.calculateTotals();
     makeSaleView.orderSummaryTotals(subTotal, tax, discount, orderTotal);
-    alert("Product added to cart successfully")
-    
+
+    // ✅ Update cart badge count here too
+    makeSaleView.getTotalCart();
+
+    alert("Product added to cart successfully");
   }
-})
+});
+
+
 
 
 document.getElementById("cartList").addEventListener("click", (e) => {
@@ -310,7 +309,9 @@ elements.checkOutBtn.addEventListener("click", () =>{
     return;
   }
   elements.totalAmountInput.value = totals.orderTotal.toFixed(2);
+  elements.orderSummary.classList.remove('hidden')
   transactionView.paymentModel()
+
 })
 
 elements.paymentCanBtn.addEventListener('click', ()=>{
@@ -426,9 +427,6 @@ window.addEventListener('load', e=>{
   if(!state.auth) state.auth = new Authentication();
   const isLoggedIn = state.auth.isLoggedIn();
   if(isLoggedIn){
-    document.getElementById('loginPage').classList.add('hidden');
-    document.getElementById('mainApp').classList.remove('hidden');
-
     const user = state.auth.getLoggedInUser();
     if(user){
       const welcomeMassage = document.getElementById('welcomeMassage');
@@ -445,8 +443,7 @@ window.addEventListener('load', e=>{
     alert(`Welcome back, ${user.name || 'User'}!`);
     
   }else{
-    document.getElementById('loginPage').classList.remove('hidden');
-    document.getElementById('mainApp').classList.add('hidden');
+    window.location.assign('login.html')
   }
 
   //Load users
@@ -484,8 +481,76 @@ window.addEventListener('load', e=>{
   const activeUser = settngs.getActiveUser();
   if(activeUser) settingsView.displayUserProfile(activeUser)
 
+  // makeSaleView.getTotalCart('cart');
+
   //load statistics
 })
 
+ const saleCtx = document.getElementById('salesChart').getContext('2d');
+//  const availableProducts = [2000, 5000, 1000]
+ const availableProducts = [2000, 5000, 1000, 1500, 2500, 1700, 40000, 9500, 10500, 6000, 3500, 2100]
+ const salesData = [3000, 8000, 1100, 1800, 2300, 1500, 30000, 9000, 11500, 4500, 2500, 2100]
 
+ const salesChart = new Chart(saleCtx, {
+    type:'line',
+    data:{
+      labels:['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      datasets:[
+        {
+          label:'Available Products',
+          data:availableProducts,
+          backgroundColor:'rgba(52, 152, 219, 0.1)',
+          borderColor:'#3498db',
+          borderWith:2,
+          fill:true,
+          tension:0.3
+        },
 
+        {
+          label:'Sales',
+          data:salesData,
+          backgroundColor:'rgba(46, 204, 113, 0.1)',
+          borderColor:'#2ecc71',
+          borderWith:2,
+          fill:true,
+          tension:0.3
+        }
+      ]
+    }
+ })
+
+ const inventeryChart = document.getElementById('inventoryChart').getContext('2d');
+ const invenCrt = new Chart(inventeryChart, {
+  type: 'doughnut',
+  data: {
+    labels: ['Low Stocks', 'Out Of Stock'],
+    datasets: [
+      {
+      data:[2532, 121],
+      backgroundColor: [
+        '#f39c12',
+        '#e74c3c'
+      ],
+      borderWith: 0,
+      cutout: '70%',
+    }
+  ],
+    options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.label}: ${context.parsed.toLocaleString()};`
+                            }
+                        }
+                    }
+                }
+            }
+
+  }
+ })

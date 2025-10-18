@@ -7,6 +7,7 @@ export const elements = {
   addUserCard: document.getElementById("userCard"),
   userCardCancelBtn: document.getElementById("addUserCardCancelBtn"),
   dashboardPage: document.getElementById("userList-1"),
+  cartNumbering:document.getElementById('cart-numbering'),
 
   userInputName: document.getElementById("userInputName"),
   userInputnum: document.getElementById("userInputnum"),
@@ -43,6 +44,7 @@ export const elements = {
   orderTotal: document.getElementById("orderTotal"),
   orderSummary: document.getElementById("orderSummary"),
 
+
   paymentContainer: document.getElementById('paymentContainer'),
   checkOutBtn: document.getElementById('checkOutBtn'),
   paymentBtn: document.getElementById('paymentBtn'),
@@ -67,6 +69,11 @@ export const elements = {
   oldPassword: document.getElementById('oldPassword'),
   newPassword: document.getElementById("newPassword"),
   settingsChangePasswordBtn: document.getElementById('settingsChangePassword'),
+  profileLink:document.getElementById('profileLink'),
+  profileName:document.getElementById('profileName'),
+  profilePhone:document.getElementById('profilePhone'),
+  profileEmail:document.getElementById('profileEmail'),
+  userName:document.getElementById('userName'),
   
 
   loginEmail: document.getElementById('loginEmail'),
@@ -75,7 +82,9 @@ export const elements = {
   loginBtn: document.getElementById('loginBtn'),
   loginPage: document.getElementById('loginPage'),
   mainApp: document.getElementById('mainApp'),
-  loggedOut: document.getElementById('loggedOut')
+  loggedOut: document.getElementById('loggedOut'),
+
+ 
 
 }
 
@@ -83,6 +92,8 @@ export const toggleProfileMenu = () => {
   elements.dropdownMenu.classList.toggle("hidden");
   elements.profileBtnicon.classList.toggle("active");    
 };
+
+
 
 export const sidebarLinks =() => {
   elements.navLinks.forEach(link => {
@@ -114,9 +125,7 @@ export const sidebarLinks =() => {
     });
   })
 }
-export const makeSaleCart = () =>{
 
-}
 
 
 

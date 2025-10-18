@@ -97,6 +97,8 @@ export const deleteCartItem = (id) => {
      * This ensures cart items and product items don't have ID conflicts.
      */
     el.parentElement.removeChild(el)
+
+     refreshCartCount()
   }
 };
 
@@ -107,6 +109,8 @@ export const clearCartItems = () => {
   elements.orderSummary.classList.add('hidden')
   elements.checkOutBtn.classList.add('hidden')
   document.getElementById('cartList').innerHTML = `<p class="text-gray-500 text-center py-4">Your cart is empty.</p>`;
+
+  refreshCartCount()
 }
 
 export const updateCartQuantity = (id, newQuantity) => {
@@ -126,6 +130,8 @@ export const updateCartQuantity = (id, newQuantity) => {
     return;
   }
   quantityElement.textContent = `Quantity: ${newQuantity}`;
+
+  refreshCartCount()
 };
 
 export const orderSummaryTotals = (subTotal, tax, discount, orderTotal) => {
@@ -142,3 +148,16 @@ export const clearOrderSummary = () => {
   elements.discount.textContent = `₦0`;
   elements.orderTotal.textContent = `₦0`;
 }
+
+export const getTotalCart = () =>{
+  const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+  const totalCarts = cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
+  if(elements.cartNumbering){
+    elements.cartNumbering.innerHTML = totalCarts
+  }
+  return totalCarts;
+}
+
+export const refreshCartCount = () => {
+  getTotalCart();
+};
