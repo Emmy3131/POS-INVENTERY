@@ -12,11 +12,16 @@ import Transaction from "./Model/Transaction.js";
 import * as settingsView from "./view/settingsView.js";
 import Authentication from "./Model/Auth.js";
 import Settings from "./Model/Setting.js";
+import Dashboard from "./Model/Dashbord.js";
+import * as dashboardView from "./view/dashbordView.js"
 
 const state = {};
 
 document.addEventListener("DOMContentLoaded", () => {
-  makeSaleView.getTotalCart()
+  if (!state.dashboard) state.dashboard = new Dashboard();
+  const totals = state.dashboard.computeTotals();
+  dashboardView.renderTotals(totals);
+
 });
 
 
@@ -231,7 +236,7 @@ document.getElementById("saletList").addEventListener("click", (e) => {
     const { subTotal, tax, discount, orderTotal } = state.MakeSale.calculateTotals();
     makeSaleView.orderSummaryTotals(subTotal, tax, discount, orderTotal);
 
-    // ✅ Update cart badge count here too
+    // Update cart badge count here too
     makeSaleView.getTotalCart();
 
     alert("Product added to cart successfully");
@@ -339,8 +344,9 @@ elements.paymentBtn.addEventListener('click', () => {
   const date = new Date().toLocaleDateString("en-GB");
   const status = "Completed";
 
+   const customerName = transactionView.getCustomerName();
    const items = state.MakeSale.cart.map(item => ({
-    productName: item.name,
+    customerName,
     productImage: item.productImage,
     quantity: item.quantity,
     price: item.price
@@ -348,7 +354,7 @@ elements.paymentBtn.addEventListener('click', () => {
 
   state.transaction.recordTransaction(
     invoiceId,
-    state.MakeSale.cart.map(item => item.name).join(", "),
+    customerName,
     orderTotal,
     paymentMethod,
     date,
@@ -481,7 +487,7 @@ window.addEventListener('load', e=>{
   const activeUser = settngs.getActiveUser();
   if(activeUser) settingsView.displayUserProfile(activeUser)
 
-  // makeSaleView.getTotalCart('cart');
+  makeSaleView.getTotalCart('cart');
 
   //load statistics
 })

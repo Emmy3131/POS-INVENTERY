@@ -726,6 +726,9 @@
   .bg-blue-200 {
     background-color: var(--color-blue-200);
   }
+  .bg-blue-500 {
+    background-color: var(--color-blue-500);
+  }
   .bg-gray-50 {
     background-color: var(--color-gray-50);
   }
@@ -767,6 +770,9 @@
   }
   .bg-yellow-200 {
     background-color: var(--color-yellow-200);
+  }
+  .bg-yellow-500 {
+    background-color: var(--color-yellow-500);
   }
   .bg-gradient-to-br {
     --tw-gradient-position: to bottom right in oklab;

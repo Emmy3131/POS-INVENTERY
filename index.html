@@ -13,7 +13,7 @@
 </head>
 
 <body class="bg-gray-100 ">
- 
+
 
   <div id="mainApp" class="">
 
@@ -27,18 +27,20 @@
         <div class="flex flex-col -space-y-1">
           <h1>POS</h1>
           <span class="text-green-400 text-md text-[17px]">INVENTERY MACHINE</span>
-          <div class=""><p id="welcomeMassage" class="text-sm opacity-50 absolute"></p></div>
+          <div class="">
+            <p id="welcomeMassage" class="text-sm opacity-50 absolute"></p>
+          </div>
         </div>
       </div>
 
-       <div class="flex rounded-xl shadow-sm border border-green-400 bg-white p-3 w-[500px] justify-between">
-          <input type="text" class="outline-0 border-0 w-full" placeholder="Search">
-          <img class="w-[20px]" src="./utilityImages/searchIcon.png" alt="">
+      <div class="flex rounded-xl shadow-sm border border-green-400 bg-white p-3 w-[500px] justify-between">
+        <input type="text" class="outline-0 border-0 w-full" placeholder="Search">
+        <img class="w-[20px]" src="./utilityImages/searchIcon.png" alt="">
       </div>
 
       <div class="flex items-center space-x-7">
         <i class="fas fa-bell text-gray-600 text-xl cursor-pointer"></i>
-        <a href="" class="flex shadow-md bg-gray-400 p-2 rounded-full gap-1 justify-center items-center">
+        <a href="" class="flex bg-gray-100 p-2 rounded-full gap-1 justify-center items-center">
           <i id="cartIcon" class="fa-solid fa-cart-plus nav-link text-gray-600 text-xl cursor-pointer"></i>
           <p id="cart-numbering" class="text-blue-950 text-[17px]">0</p>
         </a>
@@ -56,7 +58,7 @@
             <div class="py-2">
               <div id="profileLink">
                 <span class="block px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">Profile</span>
-            </div>
+              </div>
               <div id="loggedOut">
                 <span class="block px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">Logout</span>
               </div>
@@ -69,7 +71,7 @@
 
 
     <!-- Sidebar -->
-    <aside class="w-36 h-[500px] overflow-y-scroll fixed top-[90px] bg-white flex flex-col rounded-xl shadow">
+    <aside class="w-36 h-screen overflow-y-scroll fixed top-[90px] bg-white flex flex-col rounded-xl shadow">
       <nav class="space-y-4 p-3 pb-11">
         <a href="#dashboard"
           class="nav-link flex flex-col items-center gap-3 px-6 py-2 bg-black text-green-400 rounded-lg">
@@ -120,29 +122,37 @@
         <section class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-3">
           <div class="bg-white px-6 py-4 rounded-xl shadow">
             <p class="text-gray-500">Total Users</p>
-            <h2 class="text-2xl font-bold">2,629</h2>
-            <p class="text-blue-500 text-sm  bg-blue-200 rounded-xl w-[80px] px-[12px] py-[3px] mt-2"><i
-                class="fa-solid fa-arrow-trend-up"></i> +3%</p>
+            <h2 id="totalUsers" class="text-2xl font-bold">0</h2>
+            <p class="text-blue-500 text-sm bg-blue-200 rounded-xl w-[80px] px-[12px] py-[3px] mt-2">
+              <i class="fa-solid fa-arrow-trend-up"></i> +3%
+            </p>
           </div>
+
           <div class="bg-white px-6 py-4 rounded-xl shadow">
             <p class="text-gray-500">Total Products</p>
-            <h2 class="text-2xl font-bold">10,298</h2>
-            <p class="text-green-500 text-sm  bg-green-200 rounded-xl w-[80px] px-[12px] py-[3px] mt-2"><i
-                class="fa-solid fa-arrow-trend-up"></i> +5%</p>
+            <h2 id="totalProducts" class="text-2xl font-bold">0</h2>
+            <p class="text-green-500 text-sm bg-green-200 rounded-xl w-[80px] px-[12px] py-[3px] mt-2">
+              <i class="fa-solid fa-arrow-trend-up"></i> +5%
+            </p>
           </div>
+
           <div class="bg-white px-6 py-4 rounded-xl shadow">
             <p class="text-gray-500">Total Sales</p>
-            <h2 class="text-2xl font-bold">5,872</h2>
-            <p class="text-yellow-500 text-sm  bg-yellow-200 rounded-xl w-[80px] px-[12px] py-[3px] mt-2"><i
-                class="fa-solid fa-arrow-trend-up"></i> +2%</p>
+            <h2 id="totalSales" class="text-2xl font-bold">₦0</h2>
+            <p class="text-yellow-500 text-sm bg-yellow-200 rounded-xl w-[80px] px-[12px] py-[3px] mt-2">
+              <i class="fa-solid fa-arrow-trend-up"></i> +2%
+            </p>
           </div>
+
           <div class="bg-white px-6 py-4 rounded-xl shadow">
             <p class="text-gray-500">Total Transactions</p>
-            <h2 class="text-2xl font-bold">₦108,000,000</h2>
-            <p class="text-purple-500 text-sm bg-purple-200 rounded-xl w-[80px] px-[12px] py-[3px] mt-2"><i
-                class="fa-solid fa-arrow-trend-up"></i> +3%</p>
+            <h2 id="totalTransactions" class="text-2xl font-bold">₦0</h2>
+            <p class="text-purple-500 text-sm bg-purple-200 rounded-xl w-[80px] px-[12px] py-[3px] mt-2">
+              <i class="fa-solid fa-arrow-trend-up"></i> +3%
+            </p>
           </div>
         </section>
+
 
         <!-- Charts -->
         <section class="flex-col md:flex-row gap-4 mb-3 flex">
@@ -387,7 +397,6 @@
 
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-2xl font-semibold text-gray-800">Transactions</h2>
-
         </div>
 
 
@@ -396,7 +405,7 @@
             <thead class="">
               <tr class="text-gray-600 bg-gray-200">
                 <th class="px-6 py-3 font-semibold">Invoice ID</th>
-                <th class="px-6 py-3 font-semibold">Product name</th>
+                <th class="px-6 py-3 font-semibold">Customer Name</th>
                 <th class="px-6 py-3 font-semibold">Amount</th>
                 <th class="px-6 py-3 font-semibold">Payment method</th>
                 <th class="px-6 py-3 font-semibold">Date</th>
@@ -411,12 +420,16 @@
         </div>
 
         <!-- transaction details model -->
-        <div id="transItems" class="w-[400px] h-screen m-auto fixed top-0 left-0 bg-gray-400 p-5  z-20 hidden">
+        <div id="transItems" class="w-[400px] m-auto h-screen fixed top-0 left-0 bg-gray-100 p-5  z-20 hidden">
+          <div>
+            <label for="" >Subtotal</label>
+            <strong class="bg-yellow-500"></strong>
+          </div>
 
           <!-- transaction details here -->
-          <div id="showItems" class="flex items-center bg-white shadow rounded-xl p-4 mb-4">
+          <!-- <div id="showItems" class="flex items-center bg-blue-5000 shadow rounded-xl p-4 mb-4"> -->
             <!-- Image -->
-            <div class="w-32 h-28 flex-shrink-0">
+            <!-- <div class="w-32 h-28 flex-shrink-0">
               <img src="iphone.png" alt="iPhone 15 Pro Max" class="object-cover w-full h-full rounded-lg">
             </div>
 
@@ -426,8 +439,9 @@
               <p class="text-gray-500 text-sm">A17 Pro Chip | 256GB Storage</p>
               <p class="text-gray-600 mt-1">Qty 1</p>
               <p class="text-gray-600 mt-1">1122000</p>
-            </div>
-          </div>
+            </div> -->
+          <!-- </div> -->
+          
         </div>
 
 
@@ -508,13 +522,15 @@
                 <div>
                   <label class="block text-gray-700 mb-2 font-medium">ID</label>
                   <input type="text" value="POS-123"
-                    class=" text-gray-400 w-full rounded-full border border-gray-100 p-3 hover:border-green-300 outline-none transition duration-300" readonly>
+                    class=" text-gray-400 w-full rounded-full border border-gray-100 p-3 hover:border-green-300 outline-none transition duration-300"
+                    readonly>
                 </div>
 
                 <div class="md:col-span-2">
                   <label class="block text-gray-700 mb-2 font-medium">Address</label>
                   <input type="text" value="123 Main St, Cityville"
-                    class="text-gray-400 w-full rounded-full border border-gray-100 p-3 hover:border-green-300 outline-none transition duration-300" readonly>
+                    class="text-gray-400 w-full rounded-full border border-gray-100 p-3 hover:border-green-300 outline-none transition duration-300"
+                    readonly>
                 </div>
 
                 <div class="md:col-span-2 flex justify-start space-x-4 mt-4">
@@ -643,6 +659,12 @@
             </div>
 
           </div>
+
+          <label class="font-medium text-[20px] py-4 text-gray-700" for="">Customer Name</label>
+          <div class="flex border-2 border-gray-400 items-center rounded-lg p-2 mb-3 w-[615px]">
+            <input id="customerName" class="outline-0" type="text">
+          </div>
+
           <label class="font-medium text-[20px] py-4 text-gray-700" for="">Amout</label>
           <div class="flex border-2 border-gray-400 items-center rounded-lg p-2 mb-3 w-[615px]">
             <i class="fas fa-naira-sign text-gray-500"></i>

@@ -780,6 +780,10 @@ parcelHelpers.export(exports, "elements", ()=>elements);
 parcelHelpers.export(exports, "toggleProfileMenu", ()=>toggleProfileMenu);
 parcelHelpers.export(exports, "sidebarLinks", ()=>sidebarLinks);
 const elements = {
+    totalUsers: document.getElementById('totalUsers'),
+    totalProducts: document.getElementById('totalProducts'),
+    totalSales: document.getElementById('totalSales'),
+    totalTransactions: document.getElementById('totalTransactions'),
     saleChart: document.getElementById("salesChart"),
     profileBtnicon: document.getElementById("profile-btn"),
     dropdownMenu: document.getElementById("dropdown-menu"),
@@ -825,6 +829,7 @@ const elements = {
     paymentBtn: document.getElementById('paymentBtn'),
     totalAmountInput: document.getElementById('totalAmountInput'),
     paymentCanBtn: document.getElementById('paymentCanBtn'),
+    customerName: document.getElementById('customerName'),
     transList: document.getElementById('transList'),
     transDetails: document.getElementById('transDetails'),
     transItems: document.getElementById('transItems'),

@@ -686,9 +686,14 @@ var _authJs = require("./Model/Auth.js");
 var _authJsDefault = parcelHelpers.interopDefault(_authJs);
 var _settingJs = require("./Model/Setting.js");
 var _settingJsDefault = parcelHelpers.interopDefault(_settingJs);
+var _dashbordJs = require("./Model/Dashbord.js");
+var _dashbordJsDefault = parcelHelpers.interopDefault(_dashbordJs);
+var _dashbordViewJs = require("./view/dashbordView.js");
 const state = {};
 document.addEventListener("DOMContentLoaded", ()=>{
-    _makeSaleViewJs.getTotalCart();
+    if (!state.dashboard) state.dashboard = new (0, _dashbordJsDefault.default)();
+    const totals = state.dashboard.computeTotals();
+    _dashbordViewJs.renderTotals(totals);
 });
 (0, _baseJs.elements).loggedOut.addEventListener('click', ()=>{
     if (!state.auth) state.auth = new (0, _authJsDefault.default)();
@@ -836,7 +841,7 @@ document.getElementById("saletList").addEventListener("click", (e)=>{
         _makeSaleViewJs.renderCartItem(item);
         const { subTotal, tax, discount, orderTotal } = state.MakeSale.calculateTotals();
         _makeSaleViewJs.orderSummaryTotals(subTotal, tax, discount, orderTotal);
-        // ✅ Update cart badge count here too
+        // Update cart badge count here too
         _makeSaleViewJs.getTotalCart();
         alert("Product added to cart successfully");
     }
@@ -921,13 +926,14 @@ document.getElementById("cartList").addEventListener("click", (e)=>{
     const invoiceId = Date.now();
     const date = new Date().toLocaleDateString("en-GB");
     const status = "Completed";
+    const customerName = _transactionViewJs.getCustomerName();
     const items = state.MakeSale.cart.map((item)=>({
-            productName: item.name,
+            customerName,
             productImage: item.productImage,
             quantity: item.quantity,
             price: item.price
         }));
-    state.transaction.recordTransaction(invoiceId, state.MakeSale.cart.map((item)=>item.name).join(", "), orderTotal, paymentMethod, date, status, items);
+    state.transaction.recordTransaction(invoiceId, customerName, orderTotal, paymentMethod, date, status, items);
     const allTransactions = state.transaction.getAllTransactions();
     _transactionViewJs.transactionView.render(allTransactions);
     state.MakeSale.clearCart();
@@ -1022,7 +1028,7 @@ window.addEventListener('load', (e)=>{
     const settngs = new (0, _settingJsDefault.default);
     const activeUser = settngs.getActiveUser();
     if (activeUser) _settingsViewJs.displayUserProfile(activeUser);
-// makeSaleView.getTotalCart('cart');
+    _makeSaleViewJs.getTotalCart('cart');
 //load statistics
 });
 const saleCtx = document.getElementById('salesChart').getContext('2d');
@@ -1135,13 +1141,17 @@ const invenCrt = new Chart(inventeryChart, {
     }
 });
 
-},{"./view/base.js":"4ZOTV","./view/userView.js":"4aMwY","./Model/User.js":"U3xmt","./view/productView":"3wN6N","./Model/Product.js":"2K9iZ","./view/makeSaleView.js":"eZc3t","./Model/MakeSale.js":"l0sIG","./view/transactionView.js":"aBom8","./Model/Transaction.js":"4mtzz","./view/settingsView.js":"elyYT","./Model/Auth.js":"97skh","./Model/Setting.js":"5RctD","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4ZOTV":[function(require,module,exports,__globalThis) {
+},{"./view/base.js":"4ZOTV","./view/userView.js":"4aMwY","./Model/User.js":"U3xmt","./view/productView":"3wN6N","./Model/Product.js":"2K9iZ","./view/makeSaleView.js":"eZc3t","./Model/MakeSale.js":"l0sIG","./view/transactionView.js":"aBom8","./Model/Transaction.js":"4mtzz","./view/settingsView.js":"elyYT","./Model/Auth.js":"97skh","./Model/Setting.js":"5RctD","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./Model/Dashbord.js":"djXht","./view/dashbordView.js":"4okHZ"}],"4ZOTV":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "elements", ()=>elements);
 parcelHelpers.export(exports, "toggleProfileMenu", ()=>toggleProfileMenu);
 parcelHelpers.export(exports, "sidebarLinks", ()=>sidebarLinks);
 const elements = {
+    totalUsers: document.getElementById('totalUsers'),
+    totalProducts: document.getElementById('totalProducts'),
+    totalSales: document.getElementById('totalSales'),
+    totalTransactions: document.getElementById('totalTransactions'),
     saleChart: document.getElementById("salesChart"),
     profileBtnicon: document.getElementById("profile-btn"),
     dropdownMenu: document.getElementById("dropdown-menu"),
@@ -1187,6 +1197,7 @@ const elements = {
     paymentBtn: document.getElementById('paymentBtn'),
     totalAmountInput: document.getElementById('totalAmountInput'),
     paymentCanBtn: document.getElementById('paymentCanBtn'),
+    customerName: document.getElementById('customerName'),
     transList: document.getElementById('transList'),
     transDetails: document.getElementById('transDetails'),
     transItems: document.getElementById('transItems'),
@@ -1349,10 +1360,7 @@ const displayUser = (user)=>{
                     <span class="text-blue-600 font-medium status-${user.id}">${user.status}</span>
                   </td>
                   <!-- Actions -->
-                  <td class="py-4 px-6 flex justify-center gap-3">
-                    <button class="p-2 bg-green-100 text-green-600 rounded-lg hover:bg-green-200">
-                      <i class="fas fa-user-edit"></i>
-                    </button>
+                  <td class="py-4 flex justify-center gap-3">
                     <button class="p-2 bg-gray-100 text-gray-500 rounded-lg hover:bg-gray-200">
                       <i class="fas fa-user"></i>
                     </button>
@@ -1840,6 +1848,7 @@ parcelHelpers.export(exports, "paymentModel", ()=>paymentModel);
 parcelHelpers.export(exports, "itemDetailsMOdel", ()=>itemDetailsMOdel);
 parcelHelpers.export(exports, "transactionDetailsView", ()=>transactionDetailsView);
 parcelHelpers.export(exports, "transactionView", ()=>transactionView);
+parcelHelpers.export(exports, "getCustomerName", ()=>getCustomerName);
 var _baseJs = require("./base.js");
 const paymentModel = ()=>{
     (0, _baseJs.elements).paymentContainer.classList.toggle('hidden');
@@ -1856,17 +1865,18 @@ const transactionDetailsView = (items)=>{
     }
     items.forEach((item)=>{
         const itemMarkup = `
-      <div class="flex items-center bg-gray-50 p-3 rounded-lg shadow-sm mb-3">
+      <div class="flex items-center p-3 rounded-lg shadow-sm mb-3 bg-blue-500">
         <div class="w-24 h-20 flex-shrink-0">
           <img src="${item.productImage || 'https://via.placeholder.com/100'}" 
                alt="${item.productName || 'Product'}" 
-               class="object-cover w-full h-full rounded-md border border-gray-200">
+               class="object-cover w-full h-full rounded-md">
         </div>
         <div class="ml-4 flex-1">
           <h3 class="truncate w-32 font-semibold text-gray-800">${item.productName || 'Unnamed Product'}</h3>
           <p class="text-gray-600 text-sm">Qty: ${item.quantity || 1}</p>
           <p class="text-gray-800 font-medium mt-1">\u{20A6}${item.price || 0}</p>
-        </div>     
+        </div>
+      </div>     
     `;
         container.insertAdjacentHTML("beforeend", itemMarkup);
     });
@@ -1883,7 +1893,7 @@ const transactionView = {
             const transMarkup = `
         <tr id="${tr.id}" class="hover:bg-gray-50">
           <td class="px-6 py-4 font-medium text-gray-900">${tr.invoiceId}</td>
-          <td class="px-6 py-4 text-gray-700">${tr.productName}</td>
+          <td class="px-6 py-4 text-gray-700">${tr.customerName}</td>
           <td class="px-6 py-4 text-gray-900 font-semibold">${tr.orderTotal}</td>
           <td class="px-6 py-4 text-gray-700">${tr.paymentMethod}</td>
           <td class="px-6 py-4 text-gray-700">${tr.date}</td>
@@ -1901,6 +1911,9 @@ const transactionView = {
         });
     }
 };
+const getCustomerName = ()=>{
+    return (0, _baseJs.elements).customerName.value.trim();
+};
 
 },{"./base.js":"4ZOTV","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4mtzz":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -1916,11 +1929,11 @@ exports.default = class {
     persist() {
         localStorage.setItem('transactions', JSON.stringify(this.transactions));
     }
-    recordTransaction(invoiceId, productName, orderTotal, paymentMethod, date, status, items) {
+    recordTransaction(invoiceId, customerName, orderTotal, paymentMethod, date, status, items) {
         const id = new Date().getTime();
         const newTransaction = {
             invoiceId,
-            productName,
+            customerName,
             orderTotal,
             paymentMethod,
             date,
@@ -2088,6 +2101,47 @@ class Settings {
 }
 exports.default = Settings;
 
-},{"./User":"U3xmt","./Auth":"97skh","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["4CwNn","ebWYT"], "ebWYT", "parcelRequire94c2", {})
+},{"./User":"U3xmt","./Auth":"97skh","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"djXht":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+class Dashboard {
+    constructor(){
+        this.dashboard = {};
+    }
+    loadDatas() {
+        this.users = JSON.parse(localStorage.getItem('users')) || [];
+        this.products = JSON.parse(localStorage.getItem('products')) || [];
+        this.sales = JSON.parse(localStorage.getItem('transactions')) || [];
+    }
+    computeTotals() {
+        this.loadDatas();
+        const totalUsers = this.users.length;
+        const totalProducts = this.products.length;
+        const totalSales = this.sales.length;
+        const transaction = this.sales.reduce((sum, s)=>sum + (s.orderTotal || 0), 0);
+        return {
+            totalUsers,
+            totalProducts,
+            totalSales,
+            transaction
+        };
+    }
+}
+exports.default = Dashboard;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4okHZ":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "renderTotals", ()=>renderTotals);
+var _baseJs = require("./base.js");
+const renderTotals = (totals)=>{
+    if (!totals) return;
+    if ((0, _baseJs.elements).totalUsers) (0, _baseJs.elements).totalUsers.textContent = totals.totalUsers;
+    if ((0, _baseJs.elements).totalProducts) (0, _baseJs.elements).totalProducts.textContent = totals.totalProducts;
+    if ((0, _baseJs.elements).totalSales) (0, _baseJs.elements).totalSales.textContent = totals.totalSales;
+    if ((0, _baseJs.elements).totalTransactions) (0, _baseJs.elements).totalTransactions.innerHTML = `&#8358;${totals.transaction.toLocaleString()}`;
+};
+
+},{"./base.js":"4ZOTV","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["4CwNn","ebWYT"], "ebWYT", "parcelRequire94c2", {})
 
 //# sourceMappingURL=index.js.map

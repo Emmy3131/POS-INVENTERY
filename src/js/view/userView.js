@@ -57,10 +57,7 @@ export const displayUser = (user) => {
                     <span class="text-blue-600 font-medium status-${user.id}">${user.status}</span>
                   </td>
                   <!-- Actions -->
-                  <td class="py-4 px-6 flex justify-center gap-3">
-                    <button class="p-2 bg-green-100 text-green-600 rounded-lg hover:bg-green-200">
-                      <i class="fas fa-user-edit"></i>
-                    </button>
+                  <td class="py-4 flex justify-center gap-3">
                     <button class="p-2 bg-gray-100 text-gray-500 rounded-lg hover:bg-gray-200">
                       <i class="fas fa-user"></i>
                     </button>

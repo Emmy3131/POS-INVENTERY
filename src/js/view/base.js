@@ -1,4 +1,10 @@
 export const elements = {
+  totalUsers:document.getElementById('totalUsers'),
+  totalProducts:document.getElementById('totalProducts'),
+  totalSales:document.getElementById('totalSales'),
+  totalTransactions:document.getElementById('totalTransactions'),
+
+
   saleChart:document.getElementById("salesChart"),
   profileBtnicon: document.getElementById("profile-btn"),
   dropdownMenu: document.getElementById("dropdown-menu"),
@@ -50,6 +56,7 @@ export const elements = {
   paymentBtn: document.getElementById('paymentBtn'),
   totalAmountInput: document.getElementById('totalAmountInput'),
   paymentCanBtn: document.getElementById('paymentCanBtn'),
+  customerName: document.getElementById('customerName'),
 
   transList: document.getElementById('transList'),
   transDetails: document.getElementById('transDetails'),
