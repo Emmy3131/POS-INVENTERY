@@ -49,6 +49,7 @@ export default class User {
 }
 
 
+// new User().addUser('Godwin Inyene', '08144098649', '12345678', 'godwinhigh2@gmail.com', 'image')
 
 
 

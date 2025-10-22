@@ -384,8 +384,8 @@ document.getElementById('transList').addEventListener('click', (e)=>{
     if(!state.transaction) state.transaction = new Transaction()
     state.transaction.read()
     const transaction = state.transaction.transactions.find(tr=> tr.id === parseInt(id))
-    console.log('Transaction Items:', transaction.items);
-    transactionView.transactionDetailsView(transaction.items)
+    console.log('Transaction Items:', transaction);
+    transactionView.transactionDetailsView(transaction)
   }
 })
 

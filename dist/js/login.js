@@ -740,7 +740,7 @@ class User {
         const users = JSON.parse(localStorage.getItem('users'));
         if (users) this.users = users;
     }
-}
+} // new User().addUser('Godwin Inyene', '08144098649', '12345678', 'godwinhigh2@gmail.com', 'image')
 exports.default = User;
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports,__globalThis) {
